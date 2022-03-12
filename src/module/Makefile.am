@@ -18,12 +18,6 @@
 # Keep sync with src/Makefile.am
 girdir=${pkgdatadir}/gir
 
-# Keep sync with src/Makefile.am
-modulesdir=${pkglibdir}/modules
-
-# Keep sync with settings/Makefile.am
-schemasdir=${pkgdatadir}/schemas
-
 #
 # Some variables
 #
@@ -40,99 +34,49 @@ CLEANFILES=
 VOID=
 
 #
-# Subdirectories
-#
-
-SUBDIRS=\
-	gtk \
-	module \
-	modules \
-	settings \
-	$(VOID)
-
-#
 # C headers
 #
 
 EXTRA_DIST+=\
 	vapi/config.deps \
 	vapi/config.vapi \
+	vapi/patch.vapi \
+	hcl_patch.h \
 	$(VOID)
 
 #
 # Binaries and libraries
 #
 
-pkglib_LTLIBRARIES=libhalckulator.la
-bin_PROGRAMS=halckulator
+pkglib_LTLIBRARIES=libhclmodule.la
 
-libhalckulator_la_SOURCES=\
-	hcl_application.vala \
-	hcl_window.vala \
+libhclmodule_la_SOURCES=\
+	hcl_module.vala \
+	hcl_module_layout.vala \
+	hcl_module_manager.vala \
+	hcl_patch.c \
 	$(VOID)
-libhalckulator_la_CFLAGS=\
+libhclmodule_la_CFLAGS=\
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GMODULE_CFLAGS) \
-	$(GOBJECT_INTROSPECTION_CFLAGS) \
 	$(GOBJECT_CFLAGS) \
 	$(GTK_CFLAGS) \
-	$(LUA_CFLAGS) \
-	-Imodule/ \
-	-Imodules/ \
-	-DG_LOG_DOMAIN=\"Halckulator\" \
-	-DABSTOPBUILDDIR=\"${abs_top_builddir}\" \
-	-DGIRDIR=\"${girdir}\" \
-	-DLOCALEDIR=\"${localedir}\" \
-	-DMODULESDIR=\"${modulesdir}\" \
-	-DSCHEMASDIR=\"${schemasdir}\" \
-	-DPKGLIBDIR=\"${pkglibdir}\" \
+	-DG_LOG_DOMAIN=\"Halckulator.Module\" \
 	-DGAPPNAME=\"org.hck.${PACKAGE_NAME}\" \
-	-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\" \
 	-DGRESNAME=\"/org/hck/${PACKAGE_NAME}\" \
-	-D__LIBHALCKULATOR_INSIDE__=1 \
+	-D__LIBHCLMODULE_INSIDE__=1 \
 	$(VOID)
-libhalckulator_la_LIBADD=\
+libhclmodule_la_LIBADD=\
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
-	$(GMODULE_LIBS) \
-	$(GOBJECT_INTROSPECTION_LIBS) \
 	$(GOBJECT_LIBS) \
 	$(GTK_LIBS) \
-	$(LUA_LIBS) \
-	gtk/libbundle.la \
-	module/libhclmodule.la \
-	modules/libbundle.la \
 	$(VOID)
-libhalckulator_la_LDFLAGS=\
+libhclmodule_la_LDFLAGS=\
 	-rpath ${pkglibdir} \
 	-release ${PACKAGE_RELEASE} \
 	-version-info ${PACKAGE_VERSION_MAYOR}:${PACKAGE_VERSION_MINOR}:${PACKAGE_VERSION_MICRO} \
-	$(VOID)
-
-halckulator_SOURCES=\
-	hcl_main.c
-	$(VOID)
-halckulator_CFLAGS=\
-	$(GIO_CFLAGS) \
-	$(GLIB_CFLAGS) \
-	$(GMODULE_CFLAGS) \
-	$(GOBJECT_CFLAGS) \
-	$(GTK_CFLAGS) \
-	-Imodule/ \
-	-Imodules/ \
-	-DG_LOG_DOMAIN=\"Halckulator\" \
-	-DGAPPNAME=\"org.hck.${PACKAGE_NAME}\" \
-	-DGRESNAME=\"/org/hck/${PACKAGE_NAME}\" \
-	-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\" \
-	$(VOID)
-halckulator_LDADD=\
-	$(GIO_LIBS) \
-	$(GLIB_LIBS) \
-	$(GMODULE_LIBS) \
-	$(GOBJECT_LIBS) \
-	$(GTK_LIBS) \
-	libhalckulator.la \
 	$(VOID)
 
 #
@@ -142,10 +86,9 @@ halckulator_LDADD=\
 include $(INTROSPECTION_MAKEFILE)
 
 GIR_VERSION=${PACKAGE_VERSION_MAYOR}.${PACKAGE_VERSION_MINOR}
-GIR_FILENAME=Hcl-${GIR_VERSION}.gir
+GIR_FILENAME=HclModule-${GIR_VERSION}.gir
 
 INTROSPECTION_COMPILER_ARGS=\
-	--includedir module/ \
 	$(VOID)
 SUFFIXES=.typelib .gir
 
@@ -162,18 +105,14 @@ gir_DATA=\
 
 AM_VALAFLAGS=\
 	--vapidir=vapi/ \
-	--vapidir=module \
-	--vapidir=modules \
 	--vapi-comments \
 	--hide-internal \
 	--abi-stability \
-	--header libhalckulator.h \
-	--library libhalckulator \
+	--header libhclmodule.h \
+	--library libhclmodule \
 	--gir ${GIR_FILENAME} \
 	--pkg config \
-	--pkg libbuiltin \
-	--pkg libhclmodule \
+	--pkg patch \
 	-D DEBUG=${DEBUG} \
 	-D DEVELOPER=${DEVELOPER} \
-	--gresources "${top_builddir}/src/gtk/resources.gresources.xml" \
 	$(VOID)

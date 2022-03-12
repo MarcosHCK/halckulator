@@ -23,13 +23,13 @@
 *.Plo
 *.Tpo
 
-halckulator
-libhalckulator.so*
-libhalckulator-*.so*
-libhalckulator.h
-libhalckulator.vapi
-Hcl-*.gir
-Hcl-*.typelib
+libhclmodule.so*
+libhclmodule-*.so*
+libhclmodule.h
+libhclmodule.vapi
+HclModule-*.gir
+HclModule-*.typelib
 
-hcl_application.c
-hcl_window.c
+hcl_module.c
+hcl_module_layout.c
+hcl_module_manager.c

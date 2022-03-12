@@ -193,6 +193,8 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
 po/Makefile.in
 src/settings/Makefile
+src/module/Makefile
+src/modules/Makefile
 src/gtk/Makefile
 src/Makefile
 Makefile

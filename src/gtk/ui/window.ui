@@ -28,11 +28,13 @@ Author: MarcosHCK
   <!-- interface-description HclWindow -->
   <!-- interface-copyright Copyright 2021-2025 MarcosHCK -->
   <!-- interface-authors MarcosHCK -->
-  <template class="HclWindow" parent="GtkWindow">
+  <template class="HclWindow" parent="GtkApplicationWindow">
     <property name="can-focus">False</property>
     <property name="default-width">800</property>
     <property name="default-height">400</property>
-    <signal name="delete-event" handler="on_delete_event" swapped="no"/>
+    <property name="show-menubar">False</property>
+    <signal name="notify::application" handler="on_application_notify" swapped="no"/>
+    <signal name="notify::is-active" handler="on_is_active_notify" swapped="no"/>
     <child>
       <placeholder/>
     </child>
@@ -41,8 +43,8 @@ Author: MarcosHCK
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="title" translatable="yes">Halckulator</property>
+        <property name="subtitle" translatable="yes">Hacker's best tool</property>
         <property name="show-close-button">True</property>
-        <property name="decoration-layout">menu:minimize,maximize,close</property>
       </object>
     </child>
   </template>
