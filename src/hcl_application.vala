@@ -80,7 +80,7 @@ namespace Hcl
 
       manager = new Hcl.ModuleManager ();
 #if DEVELOPER == 1
-      path = GLib.File.new_for_path (Config.ABSTOPBUILDDIR + "/src/modules/contrib");
+      path = GLib.File.new_for_path (Config.ABSTOPBUILDDIR + "/src/modules");
 #else // !DEVELOPER
       path = GLib.File.new_for_path (Config.MODULESDIR);
 #endif // DEVELOPER
@@ -106,7 +106,7 @@ namespace Hcl
 
       section.insert (0, null, null);
       self.layouts = manager.menu;
-      self.layout = Hcl.Builtin.moduleid;
+      self.layout = "org.hck.halckulator.basic";
     }
 
     public override void startup ()

@@ -34,7 +34,7 @@ namespace Hcl.Patch
   public class Steal<T>
   {
     [CCode (cname = "g_steal_pointer")]
-    internal static T @get (out T pp);
+    internal static T @get (ref T pp);
   }
 
   public errordomain ModuleError

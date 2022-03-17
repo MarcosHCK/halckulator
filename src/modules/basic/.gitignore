@@ -23,7 +23,11 @@
 *.Plo
 *.Tpo
 
-libbuiltin.h
-libbuiltin.vapi
-builtin_layout.c
-builtin.c
+libbasic.so*
+libbasic-*.so*
+
+libmodule.h
+libmodule.vapi
+basicore.c
+layout.c
+module.c

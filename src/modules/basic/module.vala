@@ -18,22 +18,20 @@
 
 namespace Hcl
 {
-  public class Builtin : Hcl.Module
+  public class BasicModule : Hcl.Module
   {
-    public const string moduleid = Config.GAPPNAME + ".builtin";
-
     public override GLib.Menu get_appereance () { return new GLib.Menu (); }
-    public override Hcl.ModuleLayout get_layout () { return new Hcl.BuiltinLayout (); }
+    public override Hcl.ModuleLayout get_layout () { return new BasicLayout (); }
   }
 
   [ModuleInit]
   public Hcl.Module module_entry () throws GLib.Error
   {
     Module.check_version (Config.PACKAGE_VERSION);
-    var module = new Builtin ();
-    module.id = Hcl.Builtin.moduleid;
-    module.name = "Built-in extensions";
-    module.description = "Built-in expensions module";
+    var module = new BasicModule ();
+    module.id = Config.GAPPNAME;
+    module.name = "Basic";
+    module.description = "Basic calculator layout";
   return module;
   }
 }

@@ -17,7 +17,6 @@
  */
 #include <config.h>
 #include <gtk/resources.h>
-#include <libbuiltin.h>
 #include <libhalckulator.h>
 
 void
@@ -41,7 +40,6 @@ main (int argc, char* argv[])
    */
 
   pointer_ensure (resources_get_resource ());
-  pointer_ensure (hcl_module_entry);
 
   /*
    * Execute

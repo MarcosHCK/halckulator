@@ -195,6 +195,8 @@ po/Makefile.in
 src/settings/Makefile
 src/module/Makefile
 src/modules/Makefile
+src/modules/basic/Makefile
+src/modules/basic/gtk/Makefile
 src/gtk/Makefile
 src/Makefile
 Makefile

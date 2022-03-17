@@ -18,12 +18,12 @@
 
 namespace Hcl
 {
-  public abstract class ModuleLayout : Gtk.Grid
+  public interface ModuleLayout : Gtk.Widget
   {
-    public abstract signal void undo ();
-    public abstract signal void redo ();
-    public abstract signal void cut ();
-    public abstract signal void copy ();
-    public abstract signal void paste ();
+    public virtual signal void undo ();
+    public virtual signal void redo ();
+    public virtual signal void cut ();
+    public virtual signal void copy ();
+    public virtual signal void paste ();
   }
 }

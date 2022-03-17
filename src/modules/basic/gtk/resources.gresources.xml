@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Copyright 2021-2025 MarcosHCK
+Copyright (C) 2021-2025 MarcosHCK
+
 This file is part of halckulator.
 
 halckulator is free software: you can redistribute it and/or modify
@@ -18,10 +19,16 @@ along with halckulator. If not, see <http://www.gnu.org/licenses/>.
 
 Author: MarcosHCK
 -->
-<schemalist>
-  <schema path="/org/hck/halckulator/" id="org.hck.halckulator">
-    <key name="selected-layout" type="s">
-      <default>'org.hck.halckulator.basic'</default>
-    </key>
-  </schema>
-</schemalist>
+<gresources>
+  <gresource prefix="/org/hck/halckulator/basic/">
+
+    <!--
+     *
+     * Gtk GUI definitions
+     *
+    -->
+
+      <file preprocess="xml-stripblanks">ui/layout.ui</file>
+
+  </gresource>
+</gresources>

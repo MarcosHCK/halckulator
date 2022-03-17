@@ -18,7 +18,8 @@
 # Keep sync with src/Makefile.am
 girdir=${pkgdatadir}/gir
 
-# Keep sync with src/Makefile.am
+# Keep sync with
+# - src/modules/basic/Makefile.am
 modulesdir=${pkglibdir}/modules
 
 # Keep sync with settings/Makefile.am
@@ -78,8 +79,7 @@ libhalckulator_la_CFLAGS=\
 	$(GOBJECT_CFLAGS) \
 	$(GTK_CFLAGS) \
 	$(LUA_CFLAGS) \
-	-Imodule/ \
-	-Imodules/ \
+	-I${top_builddir}/src/module/ \
 	-DG_LOG_DOMAIN=\"Halckulator\" \
 	-DABSTOPBUILDDIR=\"${abs_top_builddir}\" \
 	-DGIRDIR=\"${girdir}\" \
@@ -102,7 +102,6 @@ libhalckulator_la_LIBADD=\
 	$(LUA_LIBS) \
 	gtk/libbundle.la \
 	module/libhclmodule.la \
-	modules/libbundle.la \
 	$(VOID)
 libhalckulator_la_LDFLAGS=\
 	-rpath ${pkglibdir} \
@@ -119,8 +118,7 @@ halckulator_CFLAGS=\
 	$(GMODULE_CFLAGS) \
 	$(GOBJECT_CFLAGS) \
 	$(GTK_CFLAGS) \
-	-Imodule/ \
-	-Imodules/ \
+	-I${top_builddir}/src/module/ \
 	-DG_LOG_DOMAIN=\"Halckulator\" \
 	-DGAPPNAME=\"org.hck.${PACKAGE_NAME}\" \
 	-DGRESNAME=\"/org/hck/${PACKAGE_NAME}\" \
@@ -162,8 +160,7 @@ gir_DATA=\
 
 AM_VALAFLAGS=\
 	--vapidir=vapi/ \
-	--vapidir=module \
-	--vapidir=modules \
+	--vapidir=module/ \
 	--vapi-comments \
 	--hide-internal \
 	--abi-stability \
@@ -171,9 +168,8 @@ AM_VALAFLAGS=\
 	--library libhalckulator \
 	--gir ${GIR_FILENAME} \
 	--pkg config \
-	--pkg libbuiltin \
 	--pkg libhclmodule \
 	-D DEBUG=${DEBUG} \
 	-D DEVELOPER=${DEVELOPER} \
-	--gresources "${top_builddir}/src/gtk/resources.gresources.xml" \
+	--gresources "gtk/resources.gresources.xml" \
 	$(VOID)

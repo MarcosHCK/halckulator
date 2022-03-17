@@ -30,6 +30,7 @@ namespace Hcl
   public class ModuleManager : GLib.Object, GLib.Initable
   {
     private GLib.HashTable<string, Hcl.Module> registry;
+    private GLib.HashTable<weak GLib.Module, bool> loaded;
     private GenericArray<ModuleEntry> modules;
     private GenericArray<GLib.File> paths;
 
@@ -51,8 +52,13 @@ namespace Hcl
 
     public bool init (GLib.Cancellable? cancellable = null) throws GLib.Error
     {
-      reset_menu ();
-      load_single (null);
+      try {
+        load_single (null);
+      } catch (ModuleManagerError error)
+      {
+        if (error.code != ModuleManagerError.UNDEFINED_INIT)
+          throw error;
+      }
     return true;
     }
 
@@ -60,11 +66,6 @@ namespace Hcl
    * private API
    *
    */
-
-    private void reset_menu ()
-    {
-      menu = new GLib.Menu ();
-    }
 
     private void appendto_menu (ModuleEntry entry)
     {
@@ -92,12 +93,22 @@ namespace Hcl
           var type = info.get_content_type ();
           if (GLib.ContentType.is_a (type, "application/x-sharedlib"))
             {
-              var modulerror = GLib.Module.@error ();
-              throw new ModuleManagerError.MISSING ("Can't open module '%s': %s", filename, modulerror);
+              var error = GLib.Module.@error ();
+              throw new ModuleManagerError.MISSING ("Can't open module '%s': %s", filename, error);
             }
           else
             {
               return false;
+            }
+        }
+      else
+        {
+          success =
+          loaded.lookup_extended (handle, null, null);
+          if (success == true)
+            {
+              warning ("Module '%s' already loaded", handle.name ());
+              return true;
             }
         }
 
@@ -127,8 +138,10 @@ namespace Hcl
           throw new ModuleManagerError.ALREADY ("Module with id '%s' already loaded", module.id);
         }
 
+      loaded.insert (handle, true);
+
       var entry = new ModuleEntry ();
-      entry.handle = Patch.Steal<GLib.Module>.@get (out handle);
+      entry.handle = Patch.Steal<GLib.Module>.@get (ref handle);
       entry.module = module;
 
       registry.insert (module.id, module);
@@ -144,8 +157,14 @@ namespace Hcl
       GLib.FileType type;
       GLib.File child;
 
+      const string attrs = 
+#if DEVELOPER == 1
+      "standard::is-symlink," +
+#endif // DEVELOPER
+      "standard::type";
+
       enumer =
-      folder.enumerate_children ("standard::type", 0, cancellable);
+      folder.enumerate_children (attrs, 0, cancellable);
       for (;;)
         {
           enumer.iterate (out info, out child, cancellable);
@@ -153,6 +172,10 @@ namespace Hcl
             break;
 
           type = info.get_file_type ();
+#if DEVELOPER == 1
+          var basename = child.get_basename ();
+          if (basename != null && basename[0] != '.')
+#endif // DEVELOPER
           switch (type)
             {
               case GLib.FileType.REGULAR:
@@ -230,8 +253,10 @@ namespace Hcl
     {
       Object ();
       this.registry = new GLib.HashTable<string, Hcl.Module> (GLib.str_hash, GLib.str_equal);
+      this.loaded = new GLib.HashTable<weak GLib.Module, bool> (GLib.direct_hash, GLib.direct_equal);
       this.modules = new GenericArray<ModuleEntry> ();
       this.paths = new GenericArray<GLib.File> ();
+      this.menu = new GLib.Menu ();
       this.init (null);
     }
   }

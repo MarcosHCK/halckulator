@@ -27,21 +27,54 @@ PACKAGE_VERSION_MICRO=@PACKAGE_VERSION_MICRO@
 PACKAGE_VERSION_BUILD=@PACKAGE_VERSION_BUILD@
 
 EXTRA_DIST=
-CLEANFILES=
 VOID=
 
 #
-# Subdirectories
+# Resources
 #
 
-SUBDIRS=\
-	basic \
+RESOURCES=\
+	$(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies resources.gresources.xml) \
+	$(VOID)
+
+EXTRA_DIST+=\
+	$(RESOURCES) \
+	$(VOID)
+	
+CLEANFILES=\
+	resources.c \
+	resources.h \
 	$(VOID)
 
 #
-# Extras
+# *.gresources.xml to *.c and *.h make target
 #
 
-EXTRA_DIST+=\
-	Readme \
+resources.c: resources.gresources.xml $(RESOURCES)
+	$(GLIB_COMPILE_RESOURCES) --target=$@ --generate-source $<
+
+resources.h: resources.gresources.xml $(RESOURCES)
+	$(GLIB_COMPILE_RESOURCES) --target=$@ --generate-header $<
+
+#
+# Binaries and libraries
+#
+
+noinst_LTLIBRARIES=libbundle.la
+
+noinst_DATA=\
+	resources.h \
+	$(VOID)
+
+libbundle_la_SOURCES=\
+	resources.c \
+	$(VOID)
+libbundle_la_CFLAGS=\
+	$(GIO_CFLAGS) \
+	$(VOID)
+libbundle_la_LIBADD=\
+	$(GIO_LIBS) \
+	$(VOID)
+libbundle_la_LDFLAGS=\
+	-static \
 	$(VOID)
