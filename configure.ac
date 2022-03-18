@@ -165,11 +165,18 @@ PKG_CHECK_MODULES([GMODULE], [gmodule-2.0])
 PKG_CHECK_MODULES([GOBJECT_INTROSPECTION], [gobject-introspection-1.0])
 PKG_CHECK_MODULES([GOBJECT], [gobject-2.0])
 PKG_CHECK_MODULES([GTK], [gtk+-3.0])
+PKG_CHECK_MODULES([LIBGMP], [gmp])
+PKG_CHECK_MODULES([LIBMPFR], [mpfr])
 PKG_CHECK_MODULES([LUA], [luajit lua5.1 lua51])
+
+AC_SUBST([MATHCORE_CFLAGS], [-I\${top_srcdir}/src/mathcore/])
+AC_SUBST([MATHCORE_LIBS], [\${top_srcdir}/src/mathcore/libmathcore.la])
 
 #
 # Check for libraries
 #
+
+AC_CHECK_LIB([gmp], [__gmpz_init])
 
 #
 # Checks for header files.
@@ -185,6 +192,8 @@ AC_C_INLINE
 # Checks for library functions.
 #
 
+AC_CHECK_FUNCS([atexit memset setlocale])
+
 #
 # Prepare output
 #
@@ -193,6 +202,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
 po/Makefile.in
 src/settings/Makefile
+src/mathcore/Makefile
 src/module/Makefile
 src/modules/Makefile
 src/modules/basic/Makefile

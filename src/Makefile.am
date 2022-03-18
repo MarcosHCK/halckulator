@@ -15,10 +15,13 @@
 # along with halckulator. If not, see <http://www.gnu.org/licenses/>.
 #
 
-# Keep sync with src/Makefile.am
+# Keep sync with
+# - src/Makefile.am
+# - src/mathcore/Makefile.am
 girdir=${pkgdatadir}/gir
 
 # Keep sync with
+# - src/Makefile.am
 # - src/modules/basic/Makefile.am
 modulesdir=${pkglibdir}/modules
 
@@ -46,6 +49,7 @@ VOID=
 
 SUBDIRS=\
 	gtk \
+	mathcore \
 	module \
 	modules \
 	settings \

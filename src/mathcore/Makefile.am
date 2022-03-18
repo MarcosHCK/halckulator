@@ -17,8 +17,8 @@
 
 # Keep sync with
 # - src/Makefile.am
-# - src/modules/basic/Makefile.am
-modulesdir=${pkglibdir}/modules
+# - src/mathcore/Makefile.am
+girdir=${pkgdatadir}/gir
 
 #
 # Some variables
@@ -36,57 +36,72 @@ CLEANFILES=
 VOID=
 
 #
-# Subdirectories
-#
-
-SUBDIRS=\
-	gtk \
-	$(VOID)
-
-#
 # C headers
 #
 
 EXTRA_DIST+=\
 	vapi/config.deps \
 	vapi/config.vapi \
+	vapi/patch.deps \
+	vapi/patch.vapi \
+	number_patch.h \
 	$(VOID)
 
 #
 # Binaries and libraries
 #
 
-modules_LTLIBRARIES=libbasic.la
+pkglib_LTLIBRARIES=libmathcore.la
 
-libbasic_la_SOURCES=\
-	basicore.vala \
-	layout.vala \
-	module.vala \
+libmathcore_la_SOURCES=\
+	core.vala \
+	number_patch.c \
+	number.vala \
 	$(VOID)
-libbasic_la_CFLAGS=\
+libmathcore_la_CFLAGS=\
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
+	$(GMODULE_CFLAGS) \
+	$(GOBJECT_INTROSPECTION_CFLAGS) \
 	$(GOBJECT_CFLAGS) \
-	$(GTK_CFLAGS) \
-	$(MATHCORE_CFLAGS) \
-	-I${top_builddir}/src/module/ \
-	-DG_LOG_DOMAIN=\"Halckulator.Module.Basic\" \
-	-DGAPPNAME=\"org.hck.${PACKAGE_NAME}.basic\" \
-	-DGRESNAME=\"/org/hck/${PACKAGE_NAME}/basic\" \
+	$(LIBGMP_CFLAGS) \
+	$(LIBMPFR_CFLAGS) \
+	-DG_LOG_DOMAIN=\"MathCore\" \
+	-D__LIBMATHCORE_INSIDE__=1 \
 	$(VOID)
-libbasic_la_LIBADD=\
+libmathcore_la_LIBADD=\
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
+	$(GMODULE_LIBS) \
+	$(GOBJECT_INTROSPECTION_LIBS) \
 	$(GOBJECT_LIBS) \
-	$(GTK_LIBS) \
-	$(MATHCORE_LIBS) \
-	gtk/libbundle.la \
+	$(LIBGMP_LIBS) \
+	$(LIBMPFR_LIBS) \
 	$(VOID)
-libbasic_la_LDFLAGS=\
-	-module \
-	-rpath ${modulesdir} \
+libmathcore_la_LDFLAGS=\
+	-rpath ${pkglibdir} \
 	-release ${PACKAGE_RELEASE} \
 	-version-info ${PACKAGE_VERSION_MAYOR}:${PACKAGE_VERSION_MINOR}:${PACKAGE_VERSION_MICRO} \
+	$(VOID)
+
+#
+# GObject-Introspection
+#
+
+include $(INTROSPECTION_MAKEFILE)
+
+GIR_VERSION=${PACKAGE_VERSION_MAYOR}.${PACKAGE_VERSION_MINOR}
+GIR_FILENAME=MathCore-${GIR_VERSION}.gir
+
+INTROSPECTION_COMPILER_ARGS=\
+	$(VOID)
+SUFFIXES=.typelib .gir
+
+${GIR_FILENAME}: $(VOID)
+
+gir_DATA=\
+	${GIR_FILENAME} \
+	$(GIR_FILENAME:.gir=.typelib) \
 	$(VOID)
 
 #
@@ -95,17 +110,14 @@ libbasic_la_LDFLAGS=\
 
 AM_VALAFLAGS=\
 	--vapidir=vapi/ \
-	--vapidir=${top_builddir}/src/mathcore/ \
-	--vapidir=${top_builddir}/src/module/ \
 	--vapi-comments \
 	--hide-internal \
 	--abi-stability \
-	--header=libmodule.h \
-	--library libmodule \
+	--header libmathcore.h \
+	--library libmathcore \
+	--gir ${GIR_FILENAME} \
 	--pkg config \
-	--pkg libhclmodule \
-	--pkg libmathcore \
+	--pkg patch \
 	-D DEBUG=${DEBUG} \
 	-D DEVELOPER=${DEVELOPER} \
-	--gresources "gtk/resources.gresources.xml" \
 	$(VOID)

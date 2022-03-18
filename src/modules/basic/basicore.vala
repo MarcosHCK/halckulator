@@ -18,6 +18,12 @@
 
 namespace Hcl
 {
+  public errordomain BasicoreError
+  {
+    FAILED,
+    UNKNOWN_FUNCTION,
+  }
+
   public class Basicore : GLib.Object
   {
     private GLib.StringBuilder number1;
@@ -59,7 +65,30 @@ namespace Hcl
     public string calculate (string number1, string number2, string function) throws GLib.Error
     {
       print ("calculate '%s %s %s'\r\n", number1, function, number2);
-    return "999";
+      var number1_ = new Math.Number.from_string (number1); print ("number1 '%s'\r\n", number1_.@string);
+      var number2_ = new Math.Number.from_string (number2); print ("number2 '%s'\r\n", number2_.@string);
+      Math.Number result;
+      switch (function)
+      {
+      case "/": result = Math.Number.div (number1_, number2_); break;
+      case "*": result = Math.Number.mul (number1_, number2_); break;
+      case "-": result = Math.Number.sub (number1_, number2_); break;
+      case "+": result = Math.Number.add (number1_, number2_); break;
+      default:
+        throw new BasicoreError.UNKNOWN_FUNCTION ("Unknown function '%s'", function);
+      }
+    return result.@string;
+    }
+
+    private int decimalat (GLib.StringBuilder number)
+    {
+      unowned var data = number.str;
+      var i = number.len;
+
+      for (i = 0; i < number.len; i++)
+      if (data[i] == '.')
+        return (int) i;
+    return -1;
     }
 
     public void touch (string value) throws GLib.Error
@@ -70,7 +99,7 @@ namespace Hcl
 
       switch (c)
       {
-        case '0': case '.':
+        case '0':
         case '1': case '2': case '3':
         case '4': case '5': case '6':
         case '7': case '8': case '9':
@@ -83,12 +112,20 @@ namespace Hcl
               number2.append_c ((char) c);
           }
           break;
+        case '.':
+          unowned GLib.StringBuilder? number = null;
+          if (this.operation == null)
+            number = number1;
+          else
+            number = number2;
+          if (decimalat (number) == -1)
+            number1.append_c ((char) c);
+          break;
         case '/': case '*':
         case '-': case '+':
           {
             if (number1.len > 0)
               this.operation = value;
-            print ("operation %s\r\n", operation);
           }
           break;
         case '^': case '&':
