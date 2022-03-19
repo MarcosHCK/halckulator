@@ -18,6 +18,7 @@
 # Keep sync with
 # - src/Makefile.am
 # - src/mathcore/Makefile.am
+# - src/mathlib/Makefile.am
 girdir=${pkgdatadir}/gir
 
 # Keep sync with
@@ -50,6 +51,7 @@ VOID=
 SUBDIRS=\
 	gtk \
 	mathcore \
+	mathlib \
 	module \
 	modules \
 	settings \

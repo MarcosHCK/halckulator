@@ -171,6 +171,8 @@ PKG_CHECK_MODULES([LUA], [luajit lua5.1 lua51])
 
 AC_SUBST([MATHCORE_CFLAGS], [-I\${top_srcdir}/src/mathcore/])
 AC_SUBST([MATHCORE_LIBS], [\${top_srcdir}/src/mathcore/libmathcore.la])
+AC_SUBST([MATHLIB_CFLAGS], [-I\${top_srcdir}/src/mathlib/])
+AC_SUBST([MATHLIB_LIBS], [\${top_srcdir}/src/mathlib/libmathlib.la])
 
 #
 # Check for libraries
@@ -203,6 +205,7 @@ AC_CONFIG_FILES([
 po/Makefile.in
 src/settings/Makefile
 src/mathcore/Makefile
+src/mathlib/Makefile
 src/module/Makefile
 src/modules/Makefile
 src/modules/basic/Makefile

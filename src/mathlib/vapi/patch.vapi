@@ -27,19 +27,6 @@ namespace Math
     public void @unref ();
   }
 
-  [CCode (cheader_filename = "stack.h")]
-  public sealed class Stack : GLib.Object
-  {
-    public int depth;
-    public int top;
-    public Stack ();
-    public void push (Value value);
-    public void pop ();
-    public unowned Value peek (int idx);
-    public void insert (Value value, int idx);
-    public void remove (int idx);
-  }
-
   [CCode (cheader_filename = "numberkind.h")]
   public enum NumberKind
   {
@@ -63,5 +50,18 @@ namespace Math
     public double get_double ();
     public void set_string (string value, int @base);
     public string get_string (int @base);
+  }
+
+  [CCode (cheader_filename = "convert.h")]
+  namespace Convert
+  {
+    public static Number z2q (Number number);
+    public static Number z2f (Number number);
+    public static Number q2z (Number number);
+    public static Number q2f (Number number);
+    public static Number f2z (Number number);
+    public static Number f2q (Number number);
+    public static NumberKind equalize_kind (NumberKind kind1, NumberKind kind2);
+    public static Number eqaulize (Number number, NumberKind kind);
   }
 }

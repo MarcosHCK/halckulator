@@ -18,6 +18,7 @@
 # Keep sync with
 # - src/Makefile.am
 # - src/mathcore/Makefile.am
+# - src/mathlib/Makefile.am
 girdir=${pkgdatadir}/gir
 
 #
@@ -57,8 +58,8 @@ EXTRA_DIST+=\
 pkglib_LTLIBRARIES=libmathcore.la
 
 libmathcore_la_SOURCES=\
-	discrete/operators.vala \
 	core.vala \
+	function.vala \
 	number.c \
 	numberkind.c \
 	stack.c \

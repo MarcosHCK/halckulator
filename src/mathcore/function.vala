@@ -16,6 +16,11 @@
  *
  */
 
-namespace Math.Discrete
+namespace Math
 {
+  public delegate int CFunction (Core core);
+
+  internal class Function : Math.Value
+  {
+  }
 }

@@ -15,6 +15,19 @@
 # along with halckulator. If not, see <http://www.gnu.org/licenses/>.
 #
 
-.dirstamp
+*.[ao]
+*.la
+*.lai
+*.lo
+*.Po
+*.Plo
+*.Tpo
 
-operators.c
+libmathlib.so*
+libmathlib-*.so*
+libmathlib.h
+libmathlib.vapi
+MathLib-*.gir
+MathLib-*.typelib
+
+arithmetics.c

@@ -180,6 +180,13 @@ namespace Math
     return (value is Number) ? value.get_string (@base) : null;
     }
 
+    public bool checknumber (int index)
+      requires ((index = validate_index (index)) >= 0)
+    {
+      var value = peek (index);
+    return (value is Number);
+    }
+
   /*
    * Constructor
    *

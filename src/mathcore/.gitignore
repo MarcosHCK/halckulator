@@ -31,3 +31,4 @@ MathCore-*.gir
 MathCore-*.typelib
 
 core.c
+function.c
