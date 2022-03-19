@@ -18,59 +18,54 @@
 
 namespace Math
 {
-  [CCode (cname = "MpxValue", cheader_filename = "number_patch.h")]
-  public struct MpxValue
+  namespace Patch
   {
-    public int type;
-    [CCode (cname = "__base")]
-    public int @base;
+  }
 
-    [CCode (cname = "mpx_value_init")]
-    public void init ();
-    [CCode (cname = "mpx_value_clear")]
-    public void clear ();
-    [CCode (cname = "mpx_value_clone")]
-    public void clone (out MpxValue value);
+  [CCode (cheader_filename = "value.h")]
+  public abstract class Value
+  {
+    [CCode (construct_function = "math_value_new", has_new_function = false)]
+    private Value ();
+    public unowned Value @ref ();
+    public void @unref ();
+  }
 
-    [CCode (cname = "mpx_value_check_type")]
-    public bool check_type (int type);
+  [CCode (cheader_filename = "stack.h")]
+  public sealed class Stack : GLib.Object
+  {
+    public int depth;
+    public int top;
+    public Stack ();
+    public void push (Value value);
+    public void pop ();
+    public unowned Value peek (int idx);
+    public void insert (Value value, int idx);
+    public void remove (int idx);
+  }
 
-    [CCode (cname = "mpx_value_z2q")]
-    public void z2q (ref MpxValue result);
-    [CCode (cname = "mpx_value_z2f")]
-    public void z2f (ref MpxValue result);
-    [CCode (cname = "mpx_value_q2f")]
-    public void q2f (ref MpxValue result);
+  [CCode (cheader_filename = "numberkind.h")]
+  public enum NumberKind
+  {
+    INTEGER,
+    RATIONAL,
+    REAL,
+  }
 
-    [CCode (cname = "mpx_value_set_numerator")]
-    public void set_numerator (ref MpxValue value);
-    [CCode (cname = "mpx_value_get_numerator")]
-    public void get_numerator (ref MpxValue result);
-    [CCode (cname = "mpx_value_set_denominator")]
-    public void set_denominator (ref MpxValue value);
-    [CCode (cname = "mpx_value_get_denominator")]
-    public void get_denominator (ref MpxValue result);
-
-    [CCode (cname = "mpx_value_set_uint")]
+  [CCode (cheader_filename = "number.h")]
+  public class Number : Math.Value
+  {
+    public NumberKind kind;
+    public Number (NumberKind kind);
     public void set_uint (uint value);
-    [CCode (cname = "mpx_value_set_double")]
-    public void set_double (double value);
-    [CCode (cname = "mpx_value_set_string")]
-    public void set_string (string value);
-    [CCode (cname = "mpx_value_get_uint")]
     public uint get_uint ();
-    [CCode (cname = "mpx_value_get_double")]
+    public void set_num (Number value);
+    public Number get_num ();
+    public void set_den (Number value);
+    public Number get_den ();
+    public void set_double (double value);
     public double get_double ();
-    [CCode (cname = "mpx_value_get_string")]
-    public string get_string ();
-
-    [CCode (cname = "mpx_value_add")]
-    public static void add (ref MpxValue value1, ref MpxValue value2, ref MpxValue result);
-    [CCode (cname = "mpx_value_sub")]
-    public static void sub (ref MpxValue value1, ref MpxValue value2, ref MpxValue result);
-    [CCode (cname = "mpx_value_mul")]
-    public static void mul (ref MpxValue value1, ref MpxValue value2, ref MpxValue result);
-    [CCode (cname = "mpx_value_div")]
-    public static void div (ref MpxValue value1, ref MpxValue value2, ref MpxValue result);
+    public void set_string (string value, int @base);
+    public string get_string (int @base);
   }
 }

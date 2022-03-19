@@ -44,7 +44,10 @@ EXTRA_DIST+=\
 	vapi/config.vapi \
 	vapi/patch.deps \
 	vapi/patch.vapi \
-	number_patch.h \
+	number.h \
+	numberkind.h \
+	stack.h \
+	value.h \
 	$(VOID)
 
 #
@@ -56,8 +59,10 @@ pkglib_LTLIBRARIES=libmathcore.la
 libmathcore_la_SOURCES=\
 	discrete/operators.vala \
 	core.vala \
-	number_patch.c \
-	number.vala \
+	number.c \
+	numberkind.c \
+	stack.c \
+	value.c \
 	$(VOID)
 libmathcore_la_CFLAGS=\
 	$(GIO_CFLAGS) \

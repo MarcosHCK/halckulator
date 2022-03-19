@@ -26,6 +26,7 @@ namespace Hcl
 
   public class Basicore : GLib.Object
   {
+    private Math.Core core;
     private GLib.StringBuilder number1;
     private GLib.StringBuilder number2;
     private GLib.StringBuilder screen;
@@ -65,19 +66,21 @@ namespace Hcl
     public string calculate (string number1, string number2, string function) throws GLib.Error
     {
       print ("calculate '%s %s %s'\r\n", number1, function, number2);
-      var number1_ = new Math.Number.from_string (number1); print ("number1 '%s'\r\n", number1_.@string);
-      var number2_ = new Math.Number.from_string (number2); print ("number2 '%s'\r\n", number2_.@string);
-      Math.Number result;
+
+      core.pushnumber_as_string (number1, 10);
+      core.pushnumber_as_string (number2, 10);
+      core.pop (2);
+
       switch (function)
       {
-      case "/": result = Math.Number.div (number1_, number2_); break;
+      /*case "/": result = Math.Number.div (number1_, number2_); break;
       case "*": result = Math.Number.mul (number1_, number2_); break;
       case "-": result = Math.Number.sub (number1_, number2_); break;
-      case "+": result = Math.Number.add (number1_, number2_); break;
+      case "+": result = Math.Number.add (number1_, number2_); break;*/
       default:
         throw new BasicoreError.UNKNOWN_FUNCTION ("Unknown function '%s'", function);
       }
-    return result.@string;
+    return "0";
     }
 
     private int decimalat (GLib.StringBuilder number)
@@ -119,7 +122,7 @@ namespace Hcl
           else
             number = number2;
           if (decimalat (number) == -1)
-            number1.append_c ((char) c);
+            number.append_c ((char) c);
           break;
         case '/': case '*':
         case '-': case '+':
@@ -214,7 +217,7 @@ namespace Hcl
           if (value == "C")
           {
             number1.truncate (0);
-            number2.truncate (1);
+            number2.truncate (0);
             operation = null;
           }
           break;
@@ -231,6 +234,7 @@ namespace Hcl
     public Basicore ()
     {
       Object ();
+      core = new Math.Core ();
       number1 = new GLib.StringBuilder.sized (64);
       number2 = new GLib.StringBuilder.sized (64);
       screen = new GLib.StringBuilder.sized (64);

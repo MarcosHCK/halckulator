@@ -31,4 +31,3 @@ MathCore-*.gir
 MathCore-*.typelib
 
 core.c
-number.c

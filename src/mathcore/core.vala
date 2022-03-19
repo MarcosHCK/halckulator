@@ -18,26 +18,26 @@
 
 namespace Math
 {
-  public class Core : GLib.Object
+  public sealed class Core : GLib.Object
   {
-    private GLib.Queue<Number> items;
+    private Math.Stack stack;
+    public int item;
 
   /*
    * private API
    *
    */
 
-    private int getuindex (int index)
+    private int validate_index (int index)
     {
       if (index >= 0)
         {
-          if (index < (int) items.length)
+          if (stack.top > index)
             return index;
         }
       else
         {
-          if ((-index) < (int) items.length)
-            return index + (int) items.length;
+          return stack.top + index;
         }
     return -1;
     }
@@ -47,21 +47,15 @@ namespace Math
    *
    */
 
-    internal static NumberKind equalize (Number value1, Number value2)
+    internal void push (Value value)
     {
-      var kind1 = (int) value1.kind;
-      var kind2 = (int) value2.kind;
-      var kind = kind1;
-      if (kind1 < kind2)
-        kind = kind2;
-    return (NumberKind) kind;
+      stack.push (value);
     }
 
-    internal static Number convert (Number value, NumberKind kind)
+    internal unowned Value peek (int index)
+      requires ((index = validate_index (index)) >= 0)
     {
-      if (value.kind != kind)
-        return value.convert (kind);
-    return value;
+      return stack.peek (index);
     }
 
   /*
@@ -69,17 +63,21 @@ namespace Math
    *
    */
 
-    public int gettop () { return (int) items.length; }
+    public int gettop ()
+    { 
+      return stack.top;
+    }
+
     public void settop (int newtop)
-      requires (newtop > 0)
+      requires (newtop >= 0)
     {
-      int i, top = (int) items.length;
+      int i, top = stack.top;
       if (newtop > top)
       {
         int extra = newtop - top;
         for (i = 0; i < extra; i++)
         {
-          items.push_head (new Number ());
+          stack.push (new Number (NumberKind.INTEGER));
         }
       }
       else
@@ -88,48 +86,98 @@ namespace Math
         int left = top - newtop;
         for (i = 0; i < left; i++)
         {
-          items.pop_head ();
+          stack.pop ();
         }
       }
     }
 
-    public void push (Number item) { items.push_head (item); }
-    public void pop (int n_items) { settop (gettop () - n_items); }
-
-    public Number peek (int index)
-      requires (index >= 0 && (index < (int) items.length))
-      requires (index < 0 && (-index < (int) items.length))
+    public void pop (int n_values)
+      requires (n_values >= 0)
     {
-      return items.peek_nth (getuindex (index));
+      settop (stack.top - n_values);
     }
 
     public void remove (int index)
-      requires (index >= 0 && (index < (int) items.length))
-      requires (index < 0 && (-index < (int) items.length))
+      requires ((index = validate_index (index)) >= 0)
     {
-      index = getuindex (index);
-      var value = peek (index);
-      items.remove (value);
-    }
-
-    public Number peekpop (int index)
-      requires (index >= 0 && (index < (int) items.length))
-      requires (index < 0 && (-index < (int) items.length))
-    {
-      index = getuindex (index);
-      var value = peek (index);
-      items.remove (value);
-    return value;
+      stack.remove (index);
     }
 
     public void insert (int index)
-      requires (index >= 0 && (index < (int) items.length))
-      requires (index < 0 && (-index < (int) items.length))
-      requires (0 > (int) items.length)
+      requires ((index = validate_index (index)) >= 0)
+      requires (0 < stack.top)
     {
-      var value = peekpop (-1);
-      index = getuindex (index);
-      items.push_nth (value, index);
+      var top = validate_index (-1);
+      var value = peek (top);
+      stack.pop ();
+      stack.insert (value, index);
+    }
+
+  /*
+   * API::push
+   *
+   */
+
+    private NumberKind guesstype (string value, out string? converted)
+    {
+      NumberKind kind = NumberKind.INTEGER;
+      unowned var val = value;
+      string? next = null;
+      ssize_t gotat = -1;
+      size_t got = 0;
+
+      converted = null;
+
+      do
+        {
+          var c = val.get_char ();
+          if (c == 0) break;
+
+          switch (c)
+          {
+          case '.':
+            next = ("%.*s%s").printf (got, value, value.offset (1 + (long) got));
+            kind = NumberKind.RATIONAL;
+            gotat = (ssize_t) got;
+            break;
+          default: ++got; break;
+          }
+        }
+      while ((val = val.next_char ()) != null);
+      switch (kind)
+        {
+          case NumberKind.INTEGER:
+            return kind;
+          case NumberKind.RATIONAL:
+            var exp = next.length - gotat;
+            converted = @"$next/1$(string.nfill (exp, '0'))";
+            break;
+          case NumberKind.REAL:
+            break;
+        }
+    return kind;
+    }
+
+    public void pushnumber_as_string (string value, int @base)
+      requires (@base > 0 || @base < 64)
+      requires (value.validate ())
+    {
+      string? converted = null;
+      var kind = guesstype (value, out converted);
+      var number = new Number (kind);
+      if (converted != null)
+        number.set_string (converted, @base);
+      else
+        number.set_string (value, @base);
+      push (number);
+    }
+
+    public string? tonumber_as_string (int index, int @base)
+      requires ((index = validate_index (index)) >= 0)
+      requires (@base > 0 || @base < 64)
+    {
+      var value = peek (index);
+    return (value is Number) ? value.get_string (@base) : null;
     }
 
   /*
@@ -140,7 +188,7 @@ namespace Math
     public Core ()
     {
       Object ();
-      items = new GLib.Queue<Number> ();
+      stack = new Stack ();
     }
   }
 }

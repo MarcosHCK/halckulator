@@ -15,7 +15,26 @@
  * along with halckulator.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#ifndef __MATH_NUMBER_KIND__
+#define __MATH_NUMBER_KIND__ 1
+#include <glib-object.h>
 
-namespace Math.Discrete
+typedef enum
 {
+  MATH_NUMBER_KIND_INTEGER,
+  MATH_NUMBER_KIND_RATIONAL,
+  MATH_NUMBER_KIND_REAL,
+} MathNumberKind;
+
+#if __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+GType
+math_number_kind_get_type (void) G_GNUC_CONST;
+
+#if __cplusplus
 }
+#endif // __cplusplus
+
+#endif // __MATH_NUMBER_KIND__
