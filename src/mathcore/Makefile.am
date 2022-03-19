@@ -54,6 +54,7 @@ EXTRA_DIST+=\
 pkglib_LTLIBRARIES=libmathcore.la
 
 libmathcore_la_SOURCES=\
+	discrete/operators.vala \
 	core.vala \
 	number_patch.c \
 	number.vala \

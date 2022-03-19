@@ -39,7 +39,7 @@ AC_CANONICAL_TARGET
 #
 # Automake
 #
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([subdir-objects])
 
 #
 # Extract mayor, minor and micro version

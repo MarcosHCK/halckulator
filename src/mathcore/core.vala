@@ -42,7 +42,12 @@ namespace Math
     return -1;
     }
 
-    private NumberKind equalize (Number value1, Number value2)
+  /*
+   * internal API
+   *
+   */
+
+    internal static NumberKind equalize (Number value1, Number value2)
     {
       var kind1 = (int) value1.kind;
       var kind2 = (int) value2.kind;
@@ -52,7 +57,7 @@ namespace Math
     return (NumberKind) kind;
     }
 
-    private Number convert (Number value, NumberKind kind)
+    internal static Number convert (Number value, NumberKind kind)
     {
       if (value.kind != kind)
         return value.convert (kind);
