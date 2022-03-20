@@ -25,10 +25,5 @@
 
 libmathcore.so*
 libmathcore-*.so*
-libmathcore.h
-libmathcore.vapi
 MathCore-*.gir
 MathCore-*.typelib
-
-core.c
-function.c

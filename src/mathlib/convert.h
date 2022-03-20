@@ -17,7 +17,10 @@
  */
 #ifndef __MATH_CONVERT__
 #define __MATH_CONVERT__
-#include <number.h>
+//#include <number.h>
+
+typedef struct _MathNumber MathNumber;
+typedef enum _MathNumberKind MathNumberKind;
 
 #if __cplusplus
 extern "C" {

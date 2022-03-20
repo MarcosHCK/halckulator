@@ -15,26 +15,43 @@
  * along with halckulator.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef __MATH_NUMBER_KIND__
-#define __MATH_NUMBER_KIND__ 1
-#include <glib-object.h>
+#include <config.h>
+#include <internal.h>
+#include <object.h>
 
-typedef enum
+typedef struct _MathNilClass MathNilClass;
+
+struct _MathNil
 {
-  MATH_NUMBER_KIND_INTEGER,
-  MATH_NUMBER_KIND_RATIONAL,
-  MATH_NUMBER_KIND_REAL,
-} MathNumberKind;
+  MathObject parent_instance;
+};
 
-#if __cplusplus
-extern "C" {
-#endif // __cplusplus
+struct _MathNilClass
+{
+  MathObjectClass parent_class;
+};
 
-GType
-math_number_kind_get_type (void) G_GNUC_CONST;
+G_DEFINE_TYPE
+(MathNil,
+ math_nil,
+ MATH_TYPE_OBJECT);
 
-#if __cplusplus
+static void
+math_nil_class_init (MathNilClass* klass) { }
+
+static void
+math_nil_init (MathNil* self) { }
+
+/*
+ * API
+ *
+ */
+
+void
+math_core_pushnil (MathCore* core)
+{
+  g_return_if_fail (MATH_IS_CORE (core));
+  MathNil* nil = math_object_new (MATH_TYPE_NIL);
+  _math_core_push (core, nil);
+  math_object_unref (nil);
 }
-#endif // __cplusplus
-
-#endif // __MATH_NUMBER_KIND__

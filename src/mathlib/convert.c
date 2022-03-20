@@ -17,7 +17,7 @@
  */
 #include <config.h>
 #include <convert.h>
-
+/*
 MathNumber*
 math_convert_z2q (MathNumber* number)
 {
@@ -143,3 +143,4 @@ math_convert_equalize (MathNumber* number, MathNumberKind kind)
       g_assert_not_reached ();
     }
 }
+*/

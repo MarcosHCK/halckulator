@@ -15,27 +15,10 @@
  * along with halckulator.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#include <config.h>
-#include <numberkind.h>
+#ifndef __LIBMATHCORE__
+#define __LIBMATHCORE__ 1
 
-GType
-math_number_kind_get_type (void)
-{
-  static
-  gsize __type__ = 0;
-  if (g_once_init_enter (&__type__))
-    {
-      static const
-      GEnumValue __values__[] =
-      {
-        {MATH_NUMBER_KIND_INTEGER, "MATH_NUMBER_KIND_INTEGER", "integer"},
-        {MATH_NUMBER_KIND_RATIONAL, "MATH_NUMBER_KIND_RATIONAL", "rational"},
-        {MATH_NUMBER_KIND_REAL, "MATH_NUMBER_KIND_REAL", "real"},
-      };
+#include "core.h"
+#include "object.h"
 
-      GType g_type;
-      g_type = g_enum_register_static ("MathNumberKind", __values__);
-      g_once_init_leave (&__type__, g_type);
-    }
-return (GType) __type__;
-}
+#endif // __LIBMATHCORE__

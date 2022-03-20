@@ -98,6 +98,7 @@ libbasic_la_LDFLAGS=\
 AM_VALAFLAGS=\
 	--vapidir=vapi/ \
 	--vapidir=${top_builddir}/src/mathcore/ \
+	--vapidir=${top_builddir}/src/mathlib/ \
 	--vapidir=${top_builddir}/src/module/ \
 	--vapi-comments \
 	--hide-internal \

@@ -67,10 +67,6 @@ namespace Hcl
     {
       print ("calculate '%s %s %s'\r\n", number1, function, number2);
 
-      core.pushnumber_as_string (number1, 10);
-      core.pushnumber_as_string (number2, 10);
-      core.pop (2);
-
       switch (function)
       {
       /*case "/": result = Math.Number.div (number1_, number2_); break;

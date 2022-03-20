@@ -41,14 +41,8 @@ VOID=
 #
 
 EXTRA_DIST+=\
-	vapi/config.deps \
-	vapi/config.vapi \
-	vapi/patch.deps \
-	vapi/patch.vapi \
-	number.h \
-	numberkind.h \
-	stack.h \
-	value.h \
+	core.h \
+	object.h \
 	$(VOID)
 
 #
@@ -58,12 +52,9 @@ EXTRA_DIST+=\
 pkglib_LTLIBRARIES=libmathcore.la
 
 libmathcore_la_SOURCES=\
-	core.vala \
-	function.vala \
-	number.c \
-	numberkind.c \
-	stack.c \
-	value.c \
+  core.c \
+	nil.c \
+	object.c \
 	$(VOID)
 libmathcore_la_CFLAGS=\
 	$(GIO_CFLAGS) \
@@ -89,42 +80,4 @@ libmathcore_la_LDFLAGS=\
 	-rpath ${pkglibdir} \
 	-release ${PACKAGE_RELEASE} \
 	-version-info ${PACKAGE_VERSION_MAYOR}:${PACKAGE_VERSION_MINOR}:${PACKAGE_VERSION_MICRO} \
-	$(VOID)
-
-#
-# GObject-Introspection
-#
-
-include $(INTROSPECTION_MAKEFILE)
-
-GIR_VERSION=${PACKAGE_VERSION_MAYOR}.${PACKAGE_VERSION_MINOR}
-GIR_FILENAME=MathCore-${GIR_VERSION}.gir
-
-INTROSPECTION_COMPILER_ARGS=\
-	$(VOID)
-SUFFIXES=.typelib .gir
-
-${GIR_FILENAME}: $(VOID)
-
-gir_DATA=\
-	${GIR_FILENAME} \
-	$(GIR_FILENAME:.gir=.typelib) \
-	$(VOID)
-
-#
-# Vala
-#
-
-AM_VALAFLAGS=\
-	--vapidir=vapi/ \
-	--vapi-comments \
-	--hide-internal \
-	--abi-stability \
-	--header libmathcore.h \
-	--library libmathcore \
-	--gir ${GIR_FILENAME} \
-	--pkg config \
-	--pkg patch \
-	-D DEBUG=${DEBUG} \
-	-D DEVELOPER=${DEVELOPER} \
 	$(VOID)

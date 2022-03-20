@@ -15,12 +15,32 @@
  * along with halckulator.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#ifndef __MATH_INTERNAL__
+#define __MATH_INTERNAL__ 1
+#include <core.h>
 
-namespace Math
-{
-  public delegate int CFunction (Core core);
+#if !__LIBMATHCORE_INSIDE__
+# error "You shouldn't be using this header"
+#endif // !__LIBMATHCORE_INSIDE__
 
-  internal class Function : Math.Value
-  {
-  }
+#if __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+/*
+ * core.c
+ *
+ */
+
+G_GNUC_INTERNAL
+void
+_math_core_push (MathCore* core, gpointer object);
+G_GNUC_INTERNAL
+void
+_math_core_pop (MathCore* core);
+
+#if __cplusplus
 }
+#endif // __cplusplus
+
+#endif // __MATH_INTERNAL__
