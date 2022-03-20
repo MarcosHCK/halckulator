@@ -55,3 +55,19 @@ math_core_pushnil (MathCore* core)
   _math_core_push (core, nil);
   math_object_unref (nil);
 }
+
+gboolean
+math_core_isnil (MathCore* core, int index)
+{
+  g_return_val_if_fail (MATH_IS_CORE (core), FALSE);
+  g_return_val_if_fail ((index = validate_index (index)) >= 0, FALSE);
+  MathObject* value = _math_core_peek (core, index);
+return MATH_IS_NIL (value);
+}
+
+gboolean
+math_core_isnone (MathCore* core, int index)
+{
+  g_return_val_if_fail (MATH_IS_CORE (core), FALSE);
+return validate_index (index) < 0;
+}

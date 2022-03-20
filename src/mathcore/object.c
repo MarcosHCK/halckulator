@@ -90,6 +90,9 @@ math_object_get_type (void)
        &__info__,
        &__fundamental__,
        G_TYPE_FLAG_ABSTRACT);
+
+      math_object_private_offset =
+      g_type_add_instance_private (g_type, sizeof (MathObjectPrivate));
       g_once_init_leave (&__typeid__, g_type);
     }
 return (GType) __typeid__;
@@ -219,9 +222,9 @@ return list;
 gpointer
 (math_object_append) (gpointer head, gpointer link)
 {
-  g_return_val_if_fail (MATH_IS_OBJECT (head), NULL);
+  g_return_val_if_fail (head == NULL || MATH_IS_OBJECT (head), NULL);
   g_return_val_if_fail (MATH_IS_OBJECT (link), NULL);
-  MathObjectPrivate* phead = ((MathObject*) head)->priv;
+  MathObjectPrivate* phead = (head != NULL) ? ((MathObject*) head)->priv : NULL;
   MathObjectPrivate* plink = ((MathObject*) link)->priv;
   GList* newhead = NULL;
 
@@ -231,7 +234,7 @@ gpointer
 
   newhead =
   _list_append_link
-  (&(phead->chain.list_),
+  ((head != NULL) ? &(phead->chain.list_) : NULL,
    &(plink->chain.list_));
 return (newhead) ? newhead->data : NULL;
 }
@@ -239,9 +242,9 @@ return (newhead) ? newhead->data : NULL;
 gpointer
 (math_object_prepend) (gpointer head, gpointer link)
 {
-  g_return_val_if_fail (MATH_IS_OBJECT (head), NULL);
+  g_return_val_if_fail (head == NULL || MATH_IS_OBJECT (head), NULL);
   g_return_val_if_fail (MATH_IS_OBJECT (link), NULL);
-  MathObjectPrivate* phead = ((MathObject*) head)->priv;
+  MathObjectPrivate* phead = (head != NULL) ? ((MathObject*) head)->priv : NULL;
   MathObjectPrivate* plink = ((MathObject*) link)->priv;
   GList* newhead = NULL;
 
@@ -251,7 +254,7 @@ gpointer
 
   newhead =
   _list_prepend_link
-  (&(phead->chain.list_),
+  ((head != NULL) ? &(phead->chain.list_) : NULL,
    &(plink->chain.list_));
 return (newhead) ? newhead->data : NULL;
 }
@@ -259,9 +262,9 @@ return (newhead) ? newhead->data : NULL;
 gpointer
 (math_object_insert) (gpointer head, gpointer link, gint position)
 {
-  g_return_val_if_fail (MATH_IS_OBJECT (head), NULL);
+  g_return_val_if_fail (head == NULL || MATH_IS_OBJECT (head), NULL);
   g_return_val_if_fail (MATH_IS_OBJECT (link), NULL);
-  MathObjectPrivate* phead = ((MathObject*) head)->priv;
+  MathObjectPrivate* phead = (head != NULL) ? ((MathObject*) head)->priv : NULL;
   MathObjectPrivate* plink = ((MathObject*) link)->priv;
   GList* newhead = NULL;
 
@@ -271,7 +274,7 @@ gpointer
 
   newhead =
   _list_insert_link
-  (&(phead->chain.list_),
+  ((head != NULL) ? &(phead->chain.list_) : NULL,
    &(plink->chain.list_),
    position);
 return (newhead) ? newhead->data : NULL;
@@ -280,6 +283,7 @@ return (newhead) ? newhead->data : NULL;
 gpointer
 (math_object_remove) (gpointer head, gpointer link)
 {
+  if (head == NULL) return NULL;
   g_return_val_if_fail (MATH_IS_OBJECT (head), NULL);
   g_return_val_if_fail (MATH_IS_OBJECT (link), NULL);
   MathObjectPrivate* phead = ((MathObject*) head)->priv;
@@ -297,6 +301,7 @@ return (newhead) ? newhead->data : NULL;
 gpointer
 (math_object_nth) (gpointer head, gint n)
 {
+  if (head == NULL) return NULL;
   g_return_val_if_fail (MATH_IS_OBJECT (head), NULL);
   MathObjectPrivate* phead = ((MathObject*) head)->priv;
   GList* newhead = g_list_nth (&(phead->chain.list_), n);
@@ -306,6 +311,7 @@ return (newhead) ? newhead->data : NULL;
 gint
 math_object_length (gpointer head)
 {
+  if (head == NULL) return 0;
   g_return_val_if_fail (MATH_IS_OBJECT (head), 0);
   MathObjectPrivate* phead = ((MathObject*) head)->priv;
 return g_list_length (&(phead->chain.list_));

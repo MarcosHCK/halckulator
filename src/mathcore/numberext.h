@@ -15,40 +15,35 @@
  * along with halckulator.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef __MATH_INTERNAL__
-#define __MATH_INTERNAL__ 1
-#include <core.h>
-
-#if !__LIBMATHCORE_INSIDE__
-# error "You shouldn't be using this header"
-#endif // !__LIBMATHCORE_INSIDE__
+#ifndef __MATH_NUMBEREXT__
+#define __MATH_NUMBEREXT__ 1
+#include <number.h>
+#include <gmp.h>
 
 #if __cplusplus
 extern "C" {
 #endif // __cplusplus
 
-/*
- * core.c
- *
- */
+typedef enum
+{
+  MATH_NUMBER_KIND_INTEGER,
+  MATH_NUMBER_KIND_RATIONAL,
+  MATH_NUMBER_KIND_REAL,
+} MathNumberKind;
 
-#define validate_index(index) ((_math_core_checkidx)(core, index))
-
-G_GNUC_INTERNAL
-int
-_math_core_checkidx (MathCore* core, int index);
-G_GNUC_INTERNAL
-void
-_math_core_push (MathCore* core, gpointer object);
-G_GNUC_INTERNAL
-void
-_math_core_pop (MathCore* core);
-G_GNUC_INTERNAL
-gpointer
-_math_core_peek (MathCore* core, gint index);
+struct _MathNumberPrivate
+{
+  MathNumberKind kind;
+  union
+  {
+    mpz_t integer;
+    mpq_t rational;
+    mpf_t real;
+  };
+};
 
 #if __cplusplus
 }
 #endif // __cplusplus
 
-#endif // __MATH_INTERNAL__
+#endif // __MATH_NUMBER__

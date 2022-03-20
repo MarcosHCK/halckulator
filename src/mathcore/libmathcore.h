@@ -19,6 +19,7 @@
 #define __LIBMATHCORE__ 1
 
 #include "core.h"
+#include "number.h"
 #include "object.h"
 
 #endif // __LIBMATHCORE__

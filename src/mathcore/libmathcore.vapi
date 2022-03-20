@@ -42,5 +42,18 @@ namespace Math
     public Core ();
     public void settop (int newtop);
     public int gettop ();
+    public void pop (int n_values);
+    public void remove (int index);
+    public void insert (int index);
+    public bool isnone (int index);
+    public void pushnil ();
+    public bool isnil (int index);
+    public bool isnoneornil (int index);
+    public void pushnumber_uint (uint value);
+    public uint tonumber_uint (int index);
+    public void pushnumber_double (double value);
+    public double tonumber_double (int index);
+    public bool pushnumber_string (string value, int @base);
+    public string tonumber_string (int index, int @base);
   }
 }

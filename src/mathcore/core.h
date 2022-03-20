@@ -48,17 +48,37 @@ math_core_gettop (MathCore* core);
 void
 math_core_settop (MathCore* core, int newtop);
 void
+math_core_pop (MathCore* core, int n_values);
+void
 math_core_remove (MathCore* core, int index);
 void
 math_core_insert (MathCore* core, int index);
 
 /*
- * C -> Math
+ * C-Math API
  *
  */
 
+gboolean
+math_core_isnone (MathCore* core, int index);
 void
 math_core_pushnil (MathCore* core);
+gboolean
+math_core_isnil (MathCore* core, int index);
+void
+math_core_pushnumber_uint (MathCore* core, unsigned int value);
+unsigned int
+math_core_tonumber_uint (MathCore* core, int index);
+void
+math_core_pushnumber_double (MathCore* core, double value);
+double
+math_core_tonumber_double (MathCore* core, int index);
+gboolean
+math_core_pushnumber_string (MathCore* core, const gchar* value, int base);
+gchar*
+math_core_tonumber_string (MathCore* core, int index, int base);
+
+#define math_core_isnoneornil(core,index) (math_core_isnone ((core),(index))||math_core_isnil ((core),(index)))
 
 #if __cplusplus
 }

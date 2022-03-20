@@ -42,6 +42,8 @@ VOID=
 
 EXTRA_DIST+=\
 	core.h \
+	number.h \
+	numberext.h \
 	object.h \
 	$(VOID)
 
@@ -54,6 +56,7 @@ pkglib_LTLIBRARIES=libmathcore.la
 libmathcore_la_SOURCES=\
   core.c \
 	nil.c \
+	number.c \
 	object.c \
 	$(VOID)
 libmathcore_la_CFLAGS=\

@@ -66,6 +66,9 @@ namespace Hcl
     public string calculate (string number1, string number2, string function) throws GLib.Error
     {
       print ("calculate '%s %s %s'\r\n", number1, function, number2);
+      core.pushnumber_string (number1, 10);
+      core.pushnumber_string (number2, 10);
+      core.pop (2);
 
       switch (function)
       {
