@@ -108,6 +108,7 @@ AM_VALAFLAGS=\
 	--pkg config \
 	--pkg libhclmodule \
 	--pkg libmathcore \
+	--pkg libmathlib \
 	-D DEBUG=${DEBUG} \
 	-D DEVELOPER=${DEVELOPER} \
 	--gresources "gtk/resources.gresources.xml" \

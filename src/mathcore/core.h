@@ -21,13 +21,9 @@
 
 #define MATH_TYPE_CORE (math_core_get_type ())
 #define MATH_CORE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), MATH_TYPE_CORE, MathCore))
-#define MATH_CORE_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), MATH_TYPE_CORE, MathCoreClass))
 #define MATH_IS_CORE(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), MATH_TYPE_CORE))
-#define MATH_IS_CORE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), MATH_TYPE_CORE))
-#define MATH_CORE_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), MATH_TYPE_CORE, MathCoreClass))
 
 typedef struct _MathCore MathCore;
-typedef struct _MathCoreClass MathCoreClass;
 
 #if __cplusplus
 extern "C" {
@@ -77,8 +73,30 @@ gboolean
 math_core_pushnumber_string (MathCore* core, const gchar* value, int base);
 gchar*
 math_core_tonumber_string (MathCore* core, int index, int base);
+gboolean
+math_core_isnumber (MathCore* core, int index);
 
 #define math_core_isnoneornil(core,index) (math_core_isnone ((core),(index))||math_core_isnil ((core),(index)))
+
+/*
+ * Closures
+ *
+ */
+
+typedef int (*MathCFunction)(MathCore *core);
+
+#define MATH_CLOSURE_MULTIRET (-1)
+
+typedef enum
+{
+  MATH_CLOSURE_SUCCESS = 0,
+  MATH_CLOSURE_ERROR = -1,
+} MathClosureResult;
+
+void
+math_core_pushcfunction (MathCore* core, MathCFunction cclosure);
+MathClosureResult
+math_core_call (MathCore* core, int n_args, int n_results);
 
 #if __cplusplus
 }

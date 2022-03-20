@@ -15,45 +15,25 @@
  * along with halckulator.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef __MATH_NUMBEREXT__
-#define __MATH_NUMBEREXT__ 1
-#include <number.h>
-#include <gmp.h>
+#ifndef __LIBMATHLIB__
+#define __LIBMATHLIB__ 1
+#include <libmathcore.h>
 
 #if __cplusplus
 extern "C" {
 #endif // __cplusplus
 
-typedef enum
-{
-  MATH_NUMBER_KIND_INTEGER,
-  MATH_NUMBER_KIND_RATIONAL,
-  MATH_NUMBER_KIND_REAL,
-} MathNumberKind;
-
-struct _MathNumberPrivate
-{
-  MathNumberKind kind;
-  union
-  {
-    mpz_t integer;
-    mpq_t rational;
-    mpf_t real;
-  };
-};
-
-/*
- * ext API
- *
- */
-
-void
-math_core_pushnumber (MathCore* core, MathNumberKind kind);
-MathNumber*
-math_core_tonumber (MathCore* core, int index);
+int
+math_lib_add (MathCore* core);
+int
+math_lib_sub (MathCore* core);
+int
+math_lib_mul (MathCore* core);
+int
+math_lib_div (MathCore* core);
 
 #if __cplusplus
 }
 #endif // __cplusplus
 
-#endif // __MATH_NUMBER__
+#endif // __LIBMATHLIB__

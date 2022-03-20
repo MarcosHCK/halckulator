@@ -65,21 +65,45 @@ namespace Hcl
 
     public string calculate (string number1, string number2, string function) throws GLib.Error
     {
-      print ("calculate '%s %s %s'\r\n", number1, function, number2);
-      core.pushnumber_string (number1, 10);
-      core.pushnumber_string (number2, 10);
-      core.pop (2);
+      string? result = null;
 
-      switch (function)
+      switch (function[0])
       {
-      /*case "/": result = Math.Number.div (number1_, number2_); break;
-      case "*": result = Math.Number.mul (number1_, number2_); break;
-      case "-": result = Math.Number.sub (number1_, number2_); break;
-      case "+": result = Math.Number.add (number1_, number2_); break;*/
+      case '/':
+        core.pushcfunction (Math.Lib.div);
+        core.pushnumber_string (number1, 10);
+        core.pushnumber_string (number2, 10);
+        core.call (2, 1);
+        result = core.tonumber_string (-1, 10);
+        core.pop (1);
+        return result;
+      case '*':
+        core.pushcfunction (Math.Lib.mul);
+        core.pushnumber_string (number1, 10);
+        core.pushnumber_string (number2, 10);
+        core.call (2, 1);
+        result = core.tonumber_string (-1, 10);
+        core.pop (1);
+        return result;
+      case '-':
+        core.pushcfunction (Math.Lib.sub);
+        core.pushnumber_string (number1, 10);
+        core.pushnumber_string (number2, 10);
+        core.call (2, 1);
+        result = core.tonumber_string (-1, 10);
+        core.pop (1);
+        return result;
+      case '+':
+        core.pushcfunction (Math.Lib.add);
+        core.pushnumber_string (number1, 10);
+        core.pushnumber_string (number2, 10);
+        core.call (2, 1);
+        result = core.tonumber_string (-1, 10);
+        core.pop (1);
+        return result;
       default:
         throw new BasicoreError.UNKNOWN_FUNCTION ("Unknown function '%s'", function);
       }
-    return "0";
     }
 
     private int decimalat (GLib.StringBuilder number)

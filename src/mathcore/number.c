@@ -98,6 +98,7 @@ math_core_pushnumber_uint (MathCore* core, unsigned int value)
   MathNumber* n = _math_number_new (MATH_NUMBER_KIND_INTEGER);
   mpz_set_ui (n->priv->integer, value);
   _math_core_push (core, n);
+  math_object_unref (n);
 }
 
 unsigned int
@@ -106,6 +107,8 @@ math_core_tonumber_uint (MathCore* core, int index)
   g_return_val_if_fail (MATH_IS_CORE (core), -1);
   g_return_val_if_fail ((index = validate_index (index)) >= 0, -1);
   MathNumber* number = _math_core_peek (core, index);
+  g_return_val_if_fail (MATH_IS_NUMBER (number), -1);
+
   switch (number->priv->kind)
   {
   case MATH_NUMBER_KIND_INTEGER:
@@ -140,6 +143,7 @@ math_core_pushnumber_double (MathCore* core, double value)
   MathNumber* n = _math_number_new (MATH_NUMBER_KIND_REAL);
   mpf_set_d (n->priv->real, value);
   _math_core_push (core, n);
+  math_object_unref (n);
 }
 
 double
@@ -148,6 +152,8 @@ math_core_tonumber_double (MathCore* core, int index)
   g_return_val_if_fail (MATH_IS_CORE (core), -1);
   g_return_val_if_fail ((index = validate_index (index)) >= 0, -1);
   MathNumber* number = _math_core_peek (core, index);
+  g_return_val_if_fail (MATH_IS_NUMBER (number), -1);
+
   switch (number->priv->kind)
   {
   case MATH_NUMBER_KIND_INTEGER:
@@ -257,6 +263,8 @@ math_core_tonumber_string (MathCore* core, int index, int base)
   g_return_val_if_fail (MATH_IS_CORE (core), NULL);
   g_return_val_if_fail ((index = validate_index (index)) >= 0, NULL);
   MathNumber* number = _math_core_peek (core, index);
+  g_return_val_if_fail (MATH_IS_NUMBER (number), NULL);
+
   switch (number->priv->kind)
   {
   case MATH_NUMBER_KIND_INTEGER:
@@ -266,4 +274,36 @@ math_core_tonumber_string (MathCore* core, int index, int base)
   case MATH_NUMBER_KIND_REAL:
     return mpf_get_str (NULL, NULL, base, 0, number->priv->real);
   }
+}
+
+gboolean
+math_core_isnumber (MathCore* core, int index)
+{
+  g_return_val_if_fail (MATH_IS_CORE (core), FALSE);
+  g_return_val_if_fail ((index = validate_index (index)) >= 0, FALSE);
+return MATH_IS_NUMBER (_math_core_peek (core, index));
+}
+
+/*
+ * ext API
+ *
+ */
+
+void
+math_core_pushnumber (MathCore* core, MathNumberKind kind)
+{
+  g_return_if_fail (MATH_IS_CORE (core));
+  MathNumber* n = _math_number_new (kind);
+  _math_core_push (core, n);
+  math_object_unref (n);
+}
+
+MathNumber*
+math_core_tonumber (MathCore* core, int index)
+{
+  g_return_val_if_fail (MATH_IS_CORE (core), NULL);
+  g_return_val_if_fail ((index = validate_index (index)) >= 0, FALSE);
+  MathNumber* number = _math_core_peek (core, index);
+  g_return_val_if_fail (MATH_IS_NUMBER (number), NULL);
+return number;
 }

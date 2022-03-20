@@ -20,6 +20,12 @@
 #include <internal.h>
 #include <object.h>
 
+#define MATH_CORE_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), MATH_TYPE_CORE, MathCoreClass))
+#define MATH_IS_CORE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), MATH_TYPE_CORE))
+#define MATH_CORE_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), MATH_TYPE_CORE, MathCoreClass))
+
+typedef struct _MathCoreClass MathCoreClass;
+
 struct _MathCore
 {
   GObject parent_instance;
@@ -96,6 +102,15 @@ int
 _math_core_checkidx (MathCore* core, int index)
 {
   return (validate_index) (core, index); 
+}
+
+G_GNUC_INTERNAL
+int
+_math_core_switchidx (MathCore* core, int index)
+{
+  int oldidx = core->top;
+  core->top = index;
+return oldidx;
 }
 
 G_GNUC_INTERNAL

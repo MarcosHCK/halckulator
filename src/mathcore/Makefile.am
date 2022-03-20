@@ -41,6 +41,7 @@ VOID=
 #
 
 EXTRA_DIST+=\
+	closure.h \
 	core.h \
 	number.h \
 	numberext.h \
@@ -54,6 +55,7 @@ EXTRA_DIST+=\
 pkglib_LTLIBRARIES=libmathcore.la
 
 libmathcore_la_SOURCES=\
+	closure.c \
   core.c \
 	nil.c \
 	number.c \
@@ -62,8 +64,6 @@ libmathcore_la_SOURCES=\
 libmathcore_la_CFLAGS=\
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
-	$(GMODULE_CFLAGS) \
-	$(GOBJECT_INTROSPECTION_CFLAGS) \
 	$(GOBJECT_CFLAGS) \
 	$(LIBGMP_CFLAGS) \
 	$(LIBMPFR_CFLAGS) \
@@ -73,8 +73,6 @@ libmathcore_la_CFLAGS=\
 libmathcore_la_LIBADD=\
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
-	$(GMODULE_LIBS) \
-	$(GOBJECT_INTROSPECTION_LIBS) \
 	$(GOBJECT_LIBS) \
 	$(LIBGMP_LIBS) \
 	$(LIBMPFR_LIBS) \

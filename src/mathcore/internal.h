@@ -32,11 +32,15 @@ extern "C" {
  *
  */
 
-#define validate_index(index) ((_math_core_checkidx)(core, index))
+#define validate_index(index) ((_math_core_checkidx)(core,(index)))
+#define switch_index(index) ((_math_core_switchidx)(core,(index)))
 
 G_GNUC_INTERNAL
 int
 _math_core_checkidx (MathCore* core, int index);
+G_GNUC_INTERNAL
+int
+_math_core_switchidx (MathCore* core, int index);
 G_GNUC_INTERNAL
 void
 _math_core_push (MathCore* core, gpointer object);

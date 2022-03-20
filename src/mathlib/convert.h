@@ -16,32 +16,19 @@
  *
  */
 #ifndef __MATH_CONVERT__
-#define __MATH_CONVERT__
-//#include <number.h>
-
-typedef struct _MathNumber MathNumber;
-typedef enum _MathNumberKind MathNumberKind;
+#define __MATH_CONVERT__ 1
+#include <libmathcorext.h>
 
 #if __cplusplus
 extern "C" {
 #endif // __cplusplus
 
-MathNumber*
-math_convert_z2q (MathNumber* number);
-MathNumber*
-math_convert_z2f (MathNumber* number);
-MathNumber*
-math_convert_q2z (MathNumber* number);
-MathNumber*
-math_convert_q2f (MathNumber* number);
-MathNumber*
-math_convert_f2z (MathNumber* number);
-MathNumber*
-math_convert_f2q (MathNumber* number);
+G_GNUC_INTERNAL
 MathNumberKind
-math_convert_equalize_kind (MathNumberKind kind1, MathNumberKind kind2);
-MathNumber*
-math_convert_equalize (MathNumber* number, MathNumberKind kind);
+_math_core_equalize (MathNumberKind kind1, MathNumberKind kind2);
+G_GNUC_INTERNAL
+void
+math_core_pushnumber_as (MathCore* core, int index, MathNumberKind newkind);
 
 #if __cplusplus
 }

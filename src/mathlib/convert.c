@@ -17,75 +17,10 @@
  */
 #include <config.h>
 #include <convert.h>
-/*
-MathNumber*
-math_convert_z2q (MathNumber* number)
-{
-  g_return_val_if_fail (MATH_IS_NUMBER (number), NULL);
-  if (!math_number_check_kind (number, MATH_NUMBER_KIND_INTEGER))
-    return NULL;
-  MathNumber* result = math_number_new (MATH_NUMBER_KIND_RATIONAL);
-  mpq_set_z (result->rational, number->integer);
-return result;
-}
 
-MathNumber*
-math_convert_z2f (MathNumber* number)
-{
-  g_return_val_if_fail (MATH_IS_NUMBER (number), NULL);
-  if (!math_number_check_kind (number, MATH_NUMBER_KIND_INTEGER))
-    return NULL;
-  MathNumber* result = math_number_new (MATH_NUMBER_KIND_REAL);
-  mpf_set_z (result->real, number->integer);
-return result;
-}
-
-MathNumber*
-math_convert_q2z (MathNumber* number)
-{
-  g_return_val_if_fail (MATH_IS_NUMBER (number), NULL);
-  if (!math_number_check_kind (number, MATH_NUMBER_KIND_RATIONAL))
-    return NULL;
-  MathNumber* result = math_number_new (MATH_NUMBER_KIND_INTEGER);
-  mpz_set_q (result->integer, number->rational);
-return result;
-}
-
-MathNumber*
-math_convert_q2f (MathNumber* number)
-{
-  g_return_val_if_fail (MATH_IS_NUMBER (number), NULL);
-  if (!math_number_check_kind (number, MATH_NUMBER_KIND_RATIONAL))
-    return NULL;
-  MathNumber* result = math_number_new (MATH_NUMBER_KIND_REAL);
-  mpf_set_q (result->real, number->rational);
-return result;
-}
-
-MathNumber*
-math_convert_f2z (MathNumber* number)
-{
-  g_return_val_if_fail (MATH_IS_NUMBER (number), NULL);
-  if (!math_number_check_kind (number, MATH_NUMBER_KIND_REAL))
-    return NULL;
-  MathNumber* result = math_number_new (MATH_NUMBER_KIND_INTEGER);
-  mpz_set_f (result->integer, number->real);
-return result;
-}
-
-MathNumber*
-math_convert_f2q (MathNumber* number)
-{
-  g_return_val_if_fail (MATH_IS_NUMBER (number), NULL);
-  if (!math_number_check_kind (number, MATH_NUMBER_KIND_REAL))
-    return NULL;
-  MathNumber* result = math_number_new (MATH_NUMBER_KIND_RATIONAL);
-  mpq_set_f (result->rational, number->real);
-return result;
-}
-
+G_GNUC_INTERNAL
 MathNumberKind
-math_convert_equalize_kind (MathNumberKind kind1, MathNumberKind kind2)
+_math_core_equalize (MathNumberKind kind1, MathNumberKind kind2)
 {
   int kind1_ = (int) kind1;
   int kind2_ = (int) kind2;
@@ -96,51 +31,146 @@ math_convert_equalize_kind (MathNumberKind kind1, MathNumberKind kind2)
     return kind2_;
 }
 
-static MathNumber*
-convert_upwards (MathNumber* number, MathNumberKind newkind)
+static inline void
+math_convert_copy (MathCore* core, int index)
 {
-  switch (newkind)
+  g_return_if_fail (MATH_IS_CORE (core));
+  g_return_if_fail (math_core_isnumber (core, index));
+  MathNumber* number = math_core_tonumber (core, index);
+  math_core_pushnumber (core, number->priv->kind);
+  MathNumber* result = math_core_tonumber (core, -1);
+  switch (number->priv->kind)
   {
+  case MATH_NUMBER_KIND_INTEGER:
+    mpz_set (result->priv->integer, number->priv->integer);
+    break;
   case MATH_NUMBER_KIND_RATIONAL:
-    switch (number->kind)
-    {
-    case MATH_NUMBER_KIND_INTEGER:
-      return math_convert_z2q (number);
-    default:
-      g_assert_not_reached ();
-      break;
-    }
+    mpq_set (result->priv->rational, number->priv->rational);
     break;
   case MATH_NUMBER_KIND_REAL:
-    switch (number->kind)
-    {
-    case MATH_NUMBER_KIND_INTEGER:
-      return math_convert_z2f (number);
-    case MATH_NUMBER_KIND_RATIONAL:
-      return math_convert_q2f (number);
-    default:
-      g_assert_not_reached ();
-      break;
-    }
-    break;
-  default:
-    g_assert_not_reached ();
+    mpf_set (result->priv->real, number->priv->real);
     break;
   }
 }
 
-MathNumber*
-math_convert_equalize (MathNumber* number, MathNumberKind kind)
+static inline void
+math_convert_z2q (MathCore* core, int index)
 {
-  if (number->kind == kind)
-    return math_value_ref (number);
-  else
-    {
-      int kind1 = (int) kind;
-      int kind2 = (int) number->kind;
-      if (kind1 >= kind2)
-        return convert_upwards (number, kind);
-      g_assert_not_reached ();
-    }
+  g_return_if_fail (MATH_IS_CORE (core));
+  g_return_if_fail (math_core_isnumber (core, index));
+  MathNumber* number = math_core_tonumber (core, index);
+  math_core_pushnumber (core, MATH_NUMBER_KIND_RATIONAL);
+  MathNumber* result = math_core_tonumber (core, -1);
+  mpq_set_z (result->priv->rational, number->priv->integer);
 }
-*/
+
+static inline void
+math_convert_z2f (MathCore* core, int index)
+{
+  g_return_if_fail (MATH_IS_CORE (core));
+  g_return_if_fail (math_core_isnumber (core, index));
+  MathNumber* number = math_core_tonumber (core, index);
+  math_core_pushnumber (core, MATH_NUMBER_KIND_REAL);
+  MathNumber* result = math_core_tonumber (core, -1);
+  mpf_set_z (result->priv->real, number->priv->integer);
+}
+
+static inline void
+math_convert_q2z (MathCore* core, int index)
+{
+  g_return_if_fail (MATH_IS_CORE (core));
+  g_return_if_fail (math_core_isnumber (core, index));
+  MathNumber* number = math_core_tonumber (core, index);
+  math_core_pushnumber (core, MATH_NUMBER_KIND_INTEGER);
+  MathNumber* result = math_core_tonumber (core, -1);
+  mpz_set_q (result->priv->integer, number->priv->rational);
+}
+
+static inline void
+math_convert_q2f (MathCore* core, int index)
+{
+  g_return_if_fail (MATH_IS_CORE (core));
+  g_return_if_fail (math_core_isnumber (core, index));
+  MathNumber* number = math_core_tonumber (core, index);
+  math_core_pushnumber (core, MATH_NUMBER_KIND_REAL);
+  MathNumber* result = math_core_tonumber (core, -1);
+  mpf_set_q (result->priv->real, number->priv->rational);
+}
+
+static inline void
+math_convert_f2z (MathCore* core, int index)
+{
+  g_return_if_fail (MATH_IS_CORE (core));
+  g_return_if_fail (math_core_isnumber (core, index));
+  MathNumber* number = math_core_tonumber (core, index);
+  math_core_pushnumber (core, MATH_NUMBER_KIND_INTEGER);
+  MathNumber* result = math_core_tonumber (core, -1);
+  mpz_set_f (result->priv->integer, number->priv->real);
+}
+
+static inline void
+math_convert_f2q (MathCore* core, int index)
+{
+  g_return_if_fail (MATH_IS_CORE (core));
+  g_return_if_fail (math_core_isnumber (core, index));
+  MathNumber* number = math_core_tonumber (core, index);
+  math_core_pushnumber (core, MATH_NUMBER_KIND_RATIONAL);
+  MathNumber* result = math_core_tonumber (core, -1);
+  mpq_set_f (result->priv->rational, number->priv->real);
+}
+
+G_GNUC_INTERNAL
+void
+math_core_pushnumber_as (MathCore* core, int index, MathNumberKind newkind)
+{
+  g_return_if_fail (MATH_IS_CORE (core));
+  g_return_if_fail (math_core_isnumber (core, index));
+  MathNumber* number = math_core_tonumber (core, index);
+  MathNumberKind kind = number->priv->kind;
+
+  switch (kind)
+  {
+  case MATH_NUMBER_KIND_INTEGER:
+    switch (newkind)
+    {
+    case MATH_NUMBER_KIND_INTEGER:
+      math_convert_copy (core, index);
+      break;
+    case MATH_NUMBER_KIND_RATIONAL:
+      math_convert_z2q (core, index);
+      break;
+    case MATH_NUMBER_KIND_REAL:
+      math_convert_z2f (core, index);
+      break;
+    }
+    break;
+  case MATH_NUMBER_KIND_RATIONAL:
+    switch (newkind)
+    {
+    case MATH_NUMBER_KIND_INTEGER:
+      math_convert_q2z (core, index);
+      break;
+    case MATH_NUMBER_KIND_RATIONAL:
+      math_convert_copy (core, index);
+      break;
+    case MATH_NUMBER_KIND_REAL:
+      math_convert_q2f (core, index);
+      break;
+    }
+    break;
+  case MATH_NUMBER_KIND_REAL:
+    switch (newkind)
+    {
+    case MATH_NUMBER_KIND_INTEGER:
+      math_convert_f2z (core, index);
+      break;
+    case MATH_NUMBER_KIND_RATIONAL:
+      math_convert_f2q (core, index);
+      break;
+    case MATH_NUMBER_KIND_REAL:
+      math_convert_copy (core, index);
+      break;
+    }
+    break;
+  }
+}

@@ -18,6 +18,7 @@
 #ifndef __LIBMATHCORE__
 #define __LIBMATHCORE__ 1
 
+#include "closure.h"
 #include "core.h"
 #include "number.h"
 #include "object.h"

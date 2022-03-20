@@ -36,6 +36,16 @@ namespace Math
     public uint length ();
   }
 
+  [CCode (cheader_filename = "libmathcore.h", has_target = false)]
+  public delegate int CFunction (Math.Core core);
+
+  [CCode (cheader_filename = "libmathcore.h")]
+  public enum ClosureResult
+  {
+    SUCCESS,
+    ERROR,
+  }
+
   [CCode (cheader_filename = "libmathcore.h")]
   public class Core : GLib.Object
   {
@@ -45,6 +55,12 @@ namespace Math
     public void pop (int n_values);
     public void remove (int index);
     public void insert (int index);
+
+  /*
+   * C-Math API
+   *
+   */
+
     public bool isnone (int index);
     public void pushnil ();
     public bool isnil (int index);
@@ -55,5 +71,16 @@ namespace Math
     public double tonumber_double (int index);
     public bool pushnumber_string (string value, int @base);
     public string tonumber_string (int index, int @base);
+    public bool isnumber (int index);
+
+  /*
+   * Closures
+   *
+   */
+
+    [CCode (cname = "MATH_CLOSURE_MULTIRET")]
+    public int MULTIRET;
+    public void pushcfunction (CFunction callback);
+    public int call (int n_args, int n_results);
   }
 }

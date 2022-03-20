@@ -25,9 +25,5 @@
 
 libmathlib.so*
 libmathlib-*.so*
-libmathlib.h
-libmathlib.vapi
 MathLib-*.gir
 MathLib-*.typelib
-
-arithmetics.c

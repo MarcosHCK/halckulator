@@ -41,11 +41,7 @@ VOID=
 #
 
 EXTRA_DIST+=\
-	vapi/config.deps \
-	vapi/config.vapi \
-	vapi/patch.deps \
-	vapi/patch.vapi \
-	convert.h \
+	convert.h
 	$(VOID)
 
 #
@@ -55,14 +51,12 @@ EXTRA_DIST+=\
 pkglib_LTLIBRARIES=libmathlib.la
 
 libmathlib_la_SOURCES=\
-	arithmetics.vala \
+	arithmetics.c \
 	convert.c \
 	$(VOID)
 libmathlib_la_CFLAGS=\
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
-	$(GMODULE_CFLAGS) \
-	$(GOBJECT_INTROSPECTION_CFLAGS) \
 	$(GOBJECT_CFLAGS) \
 	$(MATHCORE_CFLAGS) \
 	$(LIBGMP_CFLAGS) \
@@ -73,8 +67,6 @@ libmathlib_la_CFLAGS=\
 libmathlib_la_LIBADD=\
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
-	$(GMODULE_LIBS) \
-	$(GOBJECT_INTROSPECTION_LIBS) \
 	$(GOBJECT_LIBS) \
 	$(MATHCORE_LIBS) \
 	$(LIBGMP_LIBS) \
@@ -84,44 +76,4 @@ libmathlib_la_LDFLAGS=\
 	-rpath ${pkglibdir} \
 	-release ${PACKAGE_RELEASE} \
 	-version-info ${PACKAGE_VERSION_MAYOR}:${PACKAGE_VERSION_MINOR}:${PACKAGE_VERSION_MICRO} \
-	$(VOID)
-
-#
-# GObject-Introspection
-#
-
-include $(INTROSPECTION_MAKEFILE)
-
-GIR_VERSION=${PACKAGE_VERSION_MAYOR}.${PACKAGE_VERSION_MINOR}
-GIR_FILENAME=MathLib-${GIR_VERSION}.gir
-
-INTROSPECTION_COMPILER_ARGS=\
-	--includedir ${top_builddir}/src/mathcore \
-	$(VOID)
-SUFFIXES=.typelib .gir
-
-${GIR_FILENAME}: $(VOID)
-
-gir_DATA=\
-	${GIR_FILENAME} \
-	$(GIR_FILENAME:.gir=.typelib) \
-	$(VOID)
-
-#
-# Vala
-#
-
-AM_VALAFLAGS=\
-	--vapidir=vapi/ \
-	--vapidir=../mathcore \
-	--vapi-comments \
-	--hide-internal \
-	--abi-stability \
-	--header libmathlib.h \
-	--library libmathlib \
-	--gir ${GIR_FILENAME} \
-	--pkg config \
-	--pkg patch \
-	-D DEBUG=${DEBUG} \
-	-D DEVELOPER=${DEVELOPER} \
 	$(VOID)

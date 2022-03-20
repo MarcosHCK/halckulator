@@ -18,4 +18,12 @@
 
 namespace Math
 {
+  [CCode (cheader_filename = "libmathlib.h")]
+  namespace Lib
+  {
+    public static int add (Math.Core core);
+    public static int sub (Math.Core core);
+    public static int mul (Math.Core core);
+    public static int div (Math.Core core);
+  }
 }
