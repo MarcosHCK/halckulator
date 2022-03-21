@@ -16,6 +16,7 @@
  *
  */
 #include <config.h>
+#include <clonable.h>
 #include <internal.h>
 #include <number.h>
 #include <numberext.h>
@@ -24,10 +25,48 @@ G_DEFINE_QUARK
 (math-number-error-quark,
  math_number_error);
 
-G_DEFINE_TYPE_WITH_PRIVATE
+static void
+math_clonable_iface_init (MathClonableIface* iface);
+static inline MathNumber*
+_math_number_new (MathNumberKind kind);
+
+G_DEFINE_TYPE_WITH_CODE
 (MathNumber,
  math_number,
- MATH_TYPE_OBJECT);
+ MATH_TYPE_OBJECT,
+ G_IMPLEMENT_INTERFACE
+ (MATH_TYPE_CLONABLE,
+  math_clonable_iface_init)
+ G_ADD_PRIVATE (MathNumber));
+
+static MathClonable*
+math_clonable_iface_clone (MathClonable* pself)
+{
+  MathNumber* self1 = MATH_NUMBER (pself);
+  MathNumberPrivate* priv1 = self1->priv;
+  MathNumber* self2 = _math_number_new (priv1->kind);
+  MathNumberPrivate* priv2 = self2->priv;
+
+  switch (priv1->kind)
+  {
+  case MATH_NUMBER_KIND_INTEGER:
+    mpz_set (priv2->integer, priv1->integer);
+    break;
+  case MATH_NUMBER_KIND_RATIONAL:
+    mpq_set (priv2->rational, priv1->rational);
+    break;
+  case MATH_NUMBER_KIND_REAL:
+    mpf_set (priv2->real, priv1->real);
+    break;
+  }
+return (MathClonable*) self2;
+}
+
+static void
+math_clonable_iface_init (MathClonableIface* iface)
+{
+  iface->clone = math_clonable_iface_clone;
+}
 
 static void
 math_number_class_finalize (MathObject* pself)

@@ -32,28 +32,6 @@ _math_core_equalize (MathNumberKind kind1, MathNumberKind kind2)
 }
 
 static inline void
-math_convert_copy (MathCore* core, int index)
-{
-  g_return_if_fail (MATH_IS_CORE (core));
-  g_return_if_fail (math_core_isnumber (core, index));
-  MathNumber* number = math_core_tonumber (core, index);
-  math_core_pushnumber (core, number->priv->kind);
-  MathNumber* result = math_core_tonumber (core, -1);
-  switch (number->priv->kind)
-  {
-  case MATH_NUMBER_KIND_INTEGER:
-    mpz_set (result->priv->integer, number->priv->integer);
-    break;
-  case MATH_NUMBER_KIND_RATIONAL:
-    mpq_set (result->priv->rational, number->priv->rational);
-    break;
-  case MATH_NUMBER_KIND_REAL:
-    mpf_set (result->priv->real, number->priv->real);
-    break;
-  }
-}
-
-static inline void
 math_convert_z2q (MathCore* core, int index)
 {
   g_return_if_fail (MATH_IS_CORE (core));
@@ -134,7 +112,7 @@ math_core_pushnumber_as (MathCore* core, int index, MathNumberKind newkind)
     switch (newkind)
     {
     case MATH_NUMBER_KIND_INTEGER:
-      math_convert_copy (core, index);
+      math_core_pushvalue (core, index);
       break;
     case MATH_NUMBER_KIND_RATIONAL:
       math_convert_z2q (core, index);
@@ -151,7 +129,7 @@ math_core_pushnumber_as (MathCore* core, int index, MathNumberKind newkind)
       math_convert_q2z (core, index);
       break;
     case MATH_NUMBER_KIND_RATIONAL:
-      math_convert_copy (core, index);
+      math_core_pushvalue (core, index);
       break;
     case MATH_NUMBER_KIND_REAL:
       math_convert_q2f (core, index);
@@ -168,7 +146,7 @@ math_core_pushnumber_as (MathCore* core, int index, MathNumberKind newkind)
       math_convert_f2q (core, index);
       break;
     case MATH_NUMBER_KIND_REAL:
-      math_convert_copy (core, index);
+      math_core_pushvalue (core, index);
       break;
     }
     break;

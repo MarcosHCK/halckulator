@@ -44,6 +44,8 @@ math_core_gettop (MathCore* core);
 void
 math_core_settop (MathCore* core, int newtop);
 void
+math_core_pushvalue (MathCore* core, int index);
+void
 math_core_pop (MathCore* core, int n_values);
 void
 math_core_remove (MathCore* core, int index);

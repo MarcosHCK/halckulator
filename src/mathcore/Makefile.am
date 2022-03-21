@@ -41,6 +41,7 @@ VOID=
 #
 
 EXTRA_DIST+=\
+	clonable.h \
 	closure.h \
 	core.h \
 	number.h \
@@ -55,6 +56,7 @@ EXTRA_DIST+=\
 pkglib_LTLIBRARIES=libmathcore.la
 
 libmathcore_la_SOURCES=\
+	clonable.c \
 	closure.c \
   core.c \
 	nil.c \

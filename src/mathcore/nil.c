@@ -16,10 +16,17 @@
  *
  */
 #include <config.h>
+#include <clonable.h>
 #include <internal.h>
 #include <object.h>
 
+#define MATH_NIL_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), MATH_TYPE_CORE, MathNilClass))
+#define MATH_IS_NIL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), MATH_TYPE_CORE))
+#define MATH_NIL_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), MATH_TYPE_CORE, MathNilClass))
 typedef struct _MathNilClass MathNilClass;
+
+static void
+math_clonable_iface_init (MathClonableIface* iface);
 
 struct _MathNil
 {
@@ -31,10 +38,16 @@ struct _MathNilClass
   MathObjectClass parent_class;
 };
 
-G_DEFINE_TYPE
+G_DEFINE_TYPE_WITH_CODE
 (MathNil,
  math_nil,
- MATH_TYPE_OBJECT);
+ MATH_TYPE_OBJECT,
+ G_IMPLEMENT_INTERFACE
+ (MATH_TYPE_CLONABLE,
+  math_clonable_iface_init));
+
+static void
+math_clonable_iface_init (MathClonableIface* iface) { }
 
 static void
 math_nil_class_init (MathNilClass* klass) { }

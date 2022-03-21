@@ -16,6 +16,7 @@
  *
  */
 #include <config.h>
+#include <clonable.h>
 #include <core.h>
 #include <internal.h>
 #include <object.h>
@@ -189,6 +190,24 @@ math_core_settop (MathCore* core, int newtop)
 }
 
 void
+math_core_pushvalue (MathCore* core, int index)
+{
+  g_return_if_fail (MATH_IS_CORE (core));
+  /* g_return_if_fail ((index = validate_index (index)) >= 0); */
+  MathObject* object = _math_core_peek (core, index);
+  if (MATH_IS_CLONABLE (object))
+    {
+      object = math_clonable_clone (object);
+      _math_core_push (core, object);
+    }
+  else
+    {
+      /* Push a new reference */
+      _math_core_push (core, object);
+    }
+}
+
+void
 math_core_pop (MathCore* core, int n_values)
 {
   g_return_if_fail (MATH_IS_CORE (core));
@@ -200,7 +219,7 @@ void
 math_core_remove (MathCore* core, int index)
 {
   g_return_if_fail (MATH_IS_CORE (core));
-  g_return_if_fail ((index = validate_index (index)) >= 0);
+  /* g_return_if_fail ((index = validate_index (index)) >= 0); */
   MathObject* nth = _math_core_peek (core, index);
   core->head = math_object_remove (core->head, nth);
   --core->top;
