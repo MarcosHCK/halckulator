@@ -246,6 +246,16 @@ math_core_pushnumber_string (MathCore* core, const gchar* value, int base)
         return TRUE;
       }
       break;
+    case '/':
+      {
+        number = _math_number_new (MATH_NUMBER_KIND_RATIONAL);
+        mpq_set_str (number->priv->rational, value, base);
+        mpq_canonicalize (number->priv->rational);
+        _math_core_push (core, number);
+        math_object_unref (number);
+        return TRUE;
+      }
+      break;
     }
   }
   while ((val = g_utf8_next_char (val)) != NULL);

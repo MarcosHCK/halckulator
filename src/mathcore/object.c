@@ -114,7 +114,7 @@ static void
 math_object_init (MathObject* self)
 {
   self->priv = math_object_get_instance_private (self);
-  self->ref_count = 1;
+  g_atomic_ref_count_init (&(self->ref_count));
   self->priv->chain.link = self;
   self->priv->chain.next = NULL;
   self->priv->chain.prev = NULL;

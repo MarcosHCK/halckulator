@@ -66,7 +66,6 @@ namespace Hcl
     public string calculate (string number1, string number2, string function) throws GLib.Error
     {
       string? result = null;
-
       switch (function[0])
       {
       case '/':
