@@ -25,11 +25,5 @@
 
 libhclmodule.so*
 libhclmodule-*.so*
-libhclmodule.h
-libhclmodule.vapi
 HclModule-*.gir
 HclModule-*.typelib
-
-hcl_module.c
-hcl_module_layout.c
-hcl_module_manager.c

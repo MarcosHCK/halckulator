@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glade-catalog version="4.0"
+               supports="gtkbuilder"
+               name="halckulator"
+               library="hclmodule"
+               depends="gtk+"
+               book="halckulator">
+  <glade-widget-classes>
+    <glade-widget-class name="HclModuleLayout" generic-name="layout" title="Module base widget">
+    </glade-widget-class>
+  </glade-widget-classes>
+
+  <glade-widget-group name="halckulator-toplevels" title="Halckulator base classes">
+    <glade-widget-class-ref name="HclModuleLayout" />
+  </glade-widget-group>
+</glade-catalog>

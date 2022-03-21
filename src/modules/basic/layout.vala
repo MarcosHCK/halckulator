@@ -19,7 +19,7 @@
 namespace Hcl
 {
   [GtkTemplate (ui = "/org/hck/halckulator/basic/ui/layout.ui")]
-  public class BasicLayout : Gtk.Grid, Hcl.ModuleLayout
+  public class BasicLayout : Hcl.ModuleLayout
   {
     private Basicore core;
     [GtkChild]

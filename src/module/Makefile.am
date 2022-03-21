@@ -15,7 +15,11 @@
 # along with halckulator. If not, see <http://www.gnu.org/licenses/>.
 #
 
-# Keep sync with src/Makefile.am
+# Keep sync with
+# - src/Makefile.am
+# - src/mathcore/Makefile.am
+# - src/mathlib/Makefile.am
+# - src/module/Makefile.am
 girdir=${pkgdatadir}/gir
 
 #
@@ -38,10 +42,10 @@ VOID=
 #
 
 EXTRA_DIST+=\
-	vapi/config.deps \
-	vapi/config.vapi \
-	vapi/patch.vapi \
-	hcl_patch.h \
+	module.h \
+	module_entry.h \
+	module_layout.h \
+	module_manager.h \
 	$(VOID)
 
 #
@@ -51,10 +55,9 @@ EXTRA_DIST+=\
 pkglib_LTLIBRARIES=libhclmodule.la
 
 libhclmodule_la_SOURCES=\
-	hcl_module.vala \
-	hcl_module_layout.vala \
-	hcl_module_manager.vala \
-	hcl_patch.c \
+	module.c \
+	module_layout.c \
+	module_manager.c \
 	$(VOID)
 libhclmodule_la_CFLAGS=\
 	$(GIO_CFLAGS) \
@@ -77,42 +80,4 @@ libhclmodule_la_LDFLAGS=\
 	-rpath ${pkglibdir} \
 	-release ${PACKAGE_RELEASE} \
 	-version-info ${PACKAGE_VERSION_MAYOR}:${PACKAGE_VERSION_MINOR}:${PACKAGE_VERSION_MICRO} \
-	$(VOID)
-
-#
-# GObject-Introspection
-#
-
-include $(INTROSPECTION_MAKEFILE)
-
-GIR_VERSION=${PACKAGE_VERSION_MAYOR}.${PACKAGE_VERSION_MINOR}
-GIR_FILENAME=HclModule-${GIR_VERSION}.gir
-
-INTROSPECTION_COMPILER_ARGS=\
-	$(VOID)
-SUFFIXES=.typelib .gir
-
-${GIR_FILENAME}: $(VOID)
-
-gir_DATA=\
-	${GIR_FILENAME} \
-	$(GIR_FILENAME:.gir=.typelib) \
-	$(VOID)
-
-#
-# Vala
-#
-
-AM_VALAFLAGS=\
-	--vapidir=vapi/ \
-	--vapi-comments \
-	--hide-internal \
-	--abi-stability \
-	--header libhclmodule.h \
-	--library libhclmodule \
-	--gir ${GIR_FILENAME} \
-	--pkg config \
-	--pkg patch \
-	-D DEBUG=${DEBUG} \
-	-D DEVELOPER=${DEVELOPER} \
 	$(VOID)

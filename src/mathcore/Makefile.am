@@ -19,6 +19,7 @@
 # - src/Makefile.am
 # - src/mathcore/Makefile.am
 # - src/mathlib/Makefile.am
+# - src/module/Makefile.am
 girdir=${pkgdatadir}/gir
 
 #

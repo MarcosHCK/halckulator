@@ -27,4 +27,6 @@ code:
 	code ${top_builddir}
 
 glade:
+	GLADE_CATALOG_SEARCH_PATH=${top_builddir}/src/gtk/catalogs/ \
+	LD_LIBRARY_PATH=${top_builddir}/src/module/.libs/ \
 	glade

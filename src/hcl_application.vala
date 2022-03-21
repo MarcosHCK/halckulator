@@ -94,15 +94,15 @@ namespace Hcl
    *
    */
 
-    private static void connect_updates (Hcl.Application self, GLib.Menu section)
+    private static void connect_updates (Hcl.Application self_, GLib.Menu section)
     {
-      var manager = self.manager;
-      unowned var self_ = self;
+      unowned var self = self_;
+      unowned var manager = self.manager;
 
       self.update_appereance = (menu) => { section.remove (0); section.insert_submenu (0, "Appereance", menu); };
       self.update_layouts = (menu) => { section.remove (1); section.insert_submenu (1, "Layouts", menu); };
-      self.update_layout = (id) => { self_.appereance = manager.get_appereance (id); };
-      manager.notify["menu"].connect (() => { self_.layouts = manager.menu; });
+      self.update_layout = (id) => { self.appereance = manager.get_appereance (id); };
+      manager.notify["menu"].connect (() => { self.layouts = manager.menu; });
 
       section.insert (0, null, null);
       self.layouts = manager.menu;

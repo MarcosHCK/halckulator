@@ -17,24 +17,17 @@
  */
 #ifndef __HCL_MODULE_ENTRY__
 #define __HCL_MODULE_ENTRY__ 1
-#include <gio/gio.h>
 #include <gmodule.h>
+#include <module.h>
 
-#define HCL_MODULE_ENTRY_SIGNATURE_FUNCTION hcl_module_entry
-#define HCL_MODULE_ENTRY_SIGNATURE G_STRINGIFY(HCL_MODULE_ENTRY_SIGNATURE_FUNCTION)
+#define HCL_MODULE_ENTRY_SIGNATURE hcl_module_entry
+typedef HclModule* (*HclModuleEntry) (GError** error);
 
 #if __cplusplus
 extern "C" {
 #endif // __cplusplus
 
-/*
- * Automatically export entry point
- *
- */
 
-G_MODULE_EXPORT
-gpointer
-HCL_MODULE_ENTRY_SIGNATURE_FUNCTION (GError** error);
 
 #if __cplusplus
 }

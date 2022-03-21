@@ -15,33 +15,12 @@
  * along with halckulator.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#ifndef __LIBHCLMODULE__
+#define __LIBHCLMODULE__ 1
 
-[CCode (cheader_filename = "hcl_patch.h", lower_case_cprefix = "_hcl_patch_")]
-namespace Hcl.Patch
-{
-  [CCode (cheader_filename = "hcl_module_entry.h")]
-  public class Entry
-  {
-    [CCode (cname = "HCL_MODULE_ENTRY_SIGNATURE")]
-    public const string SIGNATURE;
-  }
+#include "module.h"
+#include "module_entry.h"
+#include "module_layout.h"
+#include "module_manager.h"
 
-  public class Module
-  {
-    internal static bool check_version (string expected) throws GLib.Error;
-  }
-
-  public class Steal<T>
-  {
-    [CCode (cname = "g_steal_pointer")]
-    internal static T @get (ref T pp);
-  }
-
-  public errordomain ModuleError
-  {
-    FAILED,
-    INCOMPATIBLE_VERSION,
-    VERSION_MISMATCH;
-    public static GLib.Quark quark ();
-  }
-}
+#endif // __LIBHCLMODULE__
