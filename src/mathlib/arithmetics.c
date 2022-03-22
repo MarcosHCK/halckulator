@@ -177,7 +177,10 @@ math_lib_div (MathCore* core)
 
   math_core_pushnumber_as (core, 0, kind);
   math_core_pushnumber_as (core, 1, kind);
-  math_core_pushnumber (core, kind);
+  if (kind == MATH_NUMBER_KIND_INTEGER)
+    math_core_pushnumber (core, MATH_NUMBER_KIND_RATIONAL);
+  else
+    math_core_pushnumber (core, kind);
 
   number1 = math_core_tonumber (core, -3);
   number2 = math_core_tonumber (core, -2);
@@ -186,10 +189,17 @@ math_lib_div (MathCore* core)
   switch (kind)
   {
   case MATH_NUMBER_KIND_INTEGER:
-    mpz_div
-    (result->priv->integer,
-     number1->priv->integer,
-     number2->priv->integer);
+    {
+      mpz_ptr num = mpq_numref (result->priv->rational);
+      mpz_ptr den = mpq_denref (result->priv->rational);
+      mpz_set (num, number1->priv->integer);
+      mpz_set (den, number2->priv->integer);
+      mpq_canonicalize (result->priv->rational);
+      if (!mpz_cmp_ui (den, 1))
+      {
+        math_core_pushnumber_as (core, -1, kind);
+      }
+    }
     break;
   case MATH_NUMBER_KIND_RATIONAL:
     mpq_div
