@@ -77,7 +77,11 @@ namespace Hcl
     private void on_switch_layout (string id)
     {
       var app = application as Hcl.Application;
+      var action = this.lookup_action ("Switch");
       var manager = app.manager;
+
+      var state = new GLib.Variant ("s", id);
+      ((GLib.SimpleAction) action).set_state (state);
 
       if (contents != null)
         this.remove (contents);
@@ -96,7 +100,8 @@ namespace Hcl
       Object (show_menubar : false);
       GLib.Action action;
 
-      action = new GLib.SimpleAction ("Switch", (GLib.VariantType) "s");
+      var state = new GLib.Variant ("s", "");
+      action = new GLib.SimpleAction.stateful ("Switch", (GLib.VariantType) "s", state);
       ((GLib.SimpleAction) action).activate.connect ((idv) => { this.layout = idv.get_string (); });
       ((GLib.ActionMap) this).add_action (action);
       action = new GLib.SimpleAction ("Undo", (GLib.VariantType) null);

@@ -67,4 +67,12 @@ namespace Hcl
     public unowned GLib.Menu get_appereance (string id);
     public unowned Hcl.ModuleLayout get_layout (string id);
   }
+
+  [CCode (cheader_filename = "libhclmodule.h")]
+  public sealed class Settings : GLib.Object, GLib.Initable
+  {
+    public Settings () throws GLib.Error;
+    public Settings get_default ();
+    public GLib.Settings get_settings (string schemaid);
+  }
 }

@@ -18,12 +18,20 @@
 
 namespace Hcl
 {
+  errordomain ApplicationError
+  {
+    FAILED,
+    MISSING_SETTINGS,
+  }
+
   public class Application : Gtk.Application, GLib.Initable
   {
     public Hcl.ModuleManager manager { get; private set; }
+    public GLib.Settings gsettings { get; private set; }
     private GLib.Func<GLib.Menu> update_appereance = (() => { });
     private GLib.Func<GLib.Menu> update_layouts = (() => { });
     private GLib.Func<string> update_layout = (() => { });
+    private Hcl.Settings settings;
 
   /*
    * Properties
@@ -65,15 +73,6 @@ namespace Hcl
       string name;
 
     /*
-     * Icon
-     *
-     */
-
-      name = Config.GRESNAME + "/res/org.hck.halckulator.svg";
-      icon = new Gdk.Pixbuf.from_resource (name);
-      Gtk.Window.set_default_icon (icon);
-
-    /*
      * Module manager
      *
      */
@@ -86,6 +85,28 @@ namespace Hcl
 #endif // DEVELOPER
       manager.add_path (path);
       manager.load_all ();
+
+    /*
+     * Settings
+     *
+     */
+
+      settings = new Hcl.Settings ();
+      gsettings = settings.get_settings (Config.GAPPNAME);
+
+      if (unlikely (gsettings == null))
+        {
+          throw new ApplicationError.MISSING_SETTINGS ("Missing settings schema '%s'", Config.GAPPNAME);
+        }
+
+    /*
+     * Icon
+     *
+     */
+
+      name = Config.GRESNAME + "/res/org.hck.halckulator.svg";
+      icon = new Gdk.Pixbuf.from_resource (name);
+      Gtk.Window.set_default_icon (icon);
     return true;
     }
 

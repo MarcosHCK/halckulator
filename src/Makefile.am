@@ -27,7 +27,10 @@ girdir=${pkgdatadir}/gir
 # - src/modules/basic/Makefile.am
 modulesdir=${pkglibdir}/modules
 
-# Keep sync with settings/Makefile.am
+# Keep sync with
+# - src/Makefile.am
+# - src/module/Makefile.am
+# - src/settings/Makefile.am
 schemasdir=${pkgdatadir}/schemas
 
 #

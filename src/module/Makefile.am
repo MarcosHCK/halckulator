@@ -22,6 +22,12 @@
 # - src/module/Makefile.am
 girdir=${pkgdatadir}/gir
 
+# Keep sync with
+# - src/Makefile.am
+# - src/module/Makefile.am
+# - src/settings/Makefile.am
+schemasdir=${pkgdatadir}/schemas
+
 #
 # Some variables
 #
@@ -46,6 +52,7 @@ EXTRA_DIST+=\
 	module_entry.h \
 	module_layout.h \
 	module_manager.h \
+	settings.h \
 	$(VOID)
 
 #
@@ -58,6 +65,7 @@ libhclmodule_la_SOURCES=\
 	module.c \
 	module_layout.c \
 	module_manager.c \
+	settings.c \
 	$(VOID)
 libhclmodule_la_CFLAGS=\
 	$(GIO_CFLAGS) \
@@ -65,6 +73,8 @@ libhclmodule_la_CFLAGS=\
 	$(GMODULE_CFLAGS) \
 	$(GOBJECT_CFLAGS) \
 	$(GTK_CFLAGS) \
+	-DABSTOPBUILDDIR=\"${abs_top_builddir}\" \
+	-DSCHEMASDIR=\"${schemasdir}\" \
 	-DG_LOG_DOMAIN=\"Halckulator.Module\" \
 	-DGAPPNAME=\"org.hck.${PACKAGE_NAME}\" \
 	-DGRESNAME=\"/org/hck/${PACKAGE_NAME}\" \

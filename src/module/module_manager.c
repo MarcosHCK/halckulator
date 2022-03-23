@@ -72,7 +72,7 @@ enum
 static
 GParamSpec* properties[prop_number] = {0};
 
-G_DEFINE_TYPE_WITH_CODE
+G_DEFINE_FINAL_TYPE_WITH_CODE
 (HclModuleManager,
  hcl_module_manager,
  G_TYPE_OBJECT,

@@ -15,7 +15,10 @@
 # along with halckulator. If not, see <http://www.gnu.org/licenses/>.
 #
 
-# Keep sync with src/Makefile.am
+# Keep sync with
+# - src/Makefile.am
+# - src/module/Makefile.am
+# - src/settings/Makefile.am
 schemasdir=${pkgdatadir}/schemas
 
 #

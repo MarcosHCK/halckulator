@@ -29,7 +29,7 @@ typedef enum
   HCL_MODULE_MANAGER_ERROR_UNDEFINED_INIT,
   HCL_MODULE_MANAGER_ERROR_INCONSISTENT,
   HCL_MODULE_MANAGER_ERROR_ALREADY,
-} ModuleManagerError;
+} HclModuleManagerError;
 
 #define HCL_TYPE_MODULE_MANAGER (hcl_module_manager_get_type ())
 #define HCL_MODULE_MANAGER(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), HCL_TYPE_MODULE_MANAGER, HclModuleManager))

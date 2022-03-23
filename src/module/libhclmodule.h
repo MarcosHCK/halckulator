@@ -22,5 +22,6 @@
 #include "module_entry.h"
 #include "module_layout.h"
 #include "module_manager.h"
+#include "settings.h"
 
 #endif // __LIBHCLMODULE__
