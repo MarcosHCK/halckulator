@@ -85,7 +85,6 @@ libhalckulator_la_CFLAGS=\
 	$(GOBJECT_INTROSPECTION_CFLAGS) \
 	$(GOBJECT_CFLAGS) \
 	$(GTK_CFLAGS) \
-	$(LUA_CFLAGS) \
 	-I${top_builddir}/src/module/ \
 	-DG_LOG_DOMAIN=\"Halckulator\" \
 	-DABSTOPBUILDDIR=\"${abs_top_builddir}\" \
@@ -106,7 +105,6 @@ libhalckulator_la_LIBADD=\
 	$(GOBJECT_INTROSPECTION_LIBS) \
 	$(GOBJECT_LIBS) \
 	$(GTK_LIBS) \
-	$(LUA_LIBS) \
 	gtk/libbundle.la \
 	module/libhclmodule.la \
 	$(VOID)
@@ -125,6 +123,7 @@ halckulator_CFLAGS=\
 	$(GMODULE_CFLAGS) \
 	$(GOBJECT_CFLAGS) \
 	$(GTK_CFLAGS) \
+	$(LIBHALCKULATOR_CFLAGS) \
 	-I${top_builddir}/src/module/ \
 	-DG_LOG_DOMAIN=\"Halckulator\" \
 	-DGAPPNAME=\"org.hck.${PACKAGE_NAME}\" \
@@ -137,7 +136,7 @@ halckulator_LDADD=\
 	$(GMODULE_LIBS) \
 	$(GOBJECT_LIBS) \
 	$(GTK_LIBS) \
-	libhalckulator.la \
+	$(LIBHALCKULATOR_LIBS) \
 	$(VOID)
 
 #

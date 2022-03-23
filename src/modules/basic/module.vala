@@ -20,8 +20,10 @@ namespace Hcl
 {
   public class BasicModule : Hcl.Module
   {
-    public override GLib.Menu get_appereance () { return new GLib.Menu (); }
-    public override Hcl.ModuleLayout get_layout () { return new BasicLayout (); }
+    private GLib.Menu? appereance = null;
+    private BasicLayout? layout = null;
+    public override unowned GLib.Menu get_appereance () { return (appereance == null) ? (appereance = new GLib.Menu ()) : appereance; }
+    public override unowned Hcl.ModuleLayout get_layout () { return (layout == null) ? (layout = new BasicLayout ()) : layout; }
   }
 
   [ModuleInit]

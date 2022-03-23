@@ -26,8 +26,8 @@
 libbasic.so*
 libbasic-*.so*
 
-libmodule.h
-libmodule.vapi
+libbasic.h
+libbasic.vapi
 basicore.c
 layout.c
 module.c

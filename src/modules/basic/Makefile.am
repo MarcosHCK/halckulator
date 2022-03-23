@@ -103,8 +103,8 @@ AM_VALAFLAGS=\
 	--vapi-comments \
 	--hide-internal \
 	--abi-stability \
-	--header=libmodule.h \
-	--library libmodule \
+	--header=libbasic.h \
+	--library libbasic \
 	--pkg config \
 	--pkg libhclmodule \
 	--pkg libmathcore \

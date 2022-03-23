@@ -55,8 +55,7 @@ on_hierarchy_changed (GtkWidget* pself, GtkWidget* toplevel, GtkAccelGroup* grou
 {
   if (toplevel == NULL)
     {
-      toplevel =
-      gtk_widget_get_toplevel (pself);
+      toplevel = gtk_widget_get_toplevel (pself);
       gtk_window_add_accel_group ((GtkWindow*) toplevel, group);
     }
   else
@@ -101,7 +100,7 @@ hcl_module_layout_class_dispose (GObject* pself)
 {
   HclModuleLayout* self = HCL_MODULE_LAYOUT (pself);
   HclModuleLayoutPrivate* priv = self->priv;
-  g_object_unref (priv->accelgroup);
+  g_clear_object (&(priv->accelgroup));
 G_OBJECT_CLASS (hcl_module_layout_parent_class)-> dispose (pself);
 }
 
