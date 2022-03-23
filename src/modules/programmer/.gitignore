@@ -23,9 +23,10 @@
 *.Plo
 *.Tpo
 
-libbasic.so*
-libbasic-*.so*
+libprogrammer.so*
+libprogrammer-*.so*
 
 basicore.c
 layout.c
 module.c
+width_button.c

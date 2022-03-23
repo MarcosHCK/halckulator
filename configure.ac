@@ -211,6 +211,8 @@ src/module/Makefile
 src/modules/Makefile
 src/modules/basic/Makefile
 src/modules/basic/gtk/Makefile
+src/modules/programmer/Makefile
+src/modules/programmer/gtk/Makefile
 src/gtk/Makefile
 src/Makefile
 Makefile

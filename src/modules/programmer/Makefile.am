@@ -56,14 +56,14 @@ EXTRA_DIST+=\
 # Binaries and libraries
 #
 
-modules_LTLIBRARIES=libbasic.la
+modules_LTLIBRARIES=libprogrammer.la
 
-libbasic_la_SOURCES=\
-	basicore.vala \
+libprogrammer_la_SOURCES=\
 	layout.vala \
 	module.vala \
+	width_button.vala \
 	$(VOID)
-libbasic_la_CFLAGS=\
+libprogrammer_la_CFLAGS=\
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(GOBJECT_CFLAGS) \
@@ -71,11 +71,11 @@ libbasic_la_CFLAGS=\
 	$(MATHCORE_CFLAGS) \
 	$(MATHLIB_CFLAGS) \
 	-I${top_builddir}/src/module/ \
-	-DG_LOG_DOMAIN=\"Halckulator.Module.Basic\" \
-	-DGAPPNAME=\"org.hck.${PACKAGE_NAME}.basic\" \
-	-DGRESNAME=\"/org/hck/${PACKAGE_NAME}/basic\" \
+	-DG_LOG_DOMAIN=\"Halckulator.Module.Programmer\" \
+	-DGAPPNAME=\"org.hck.${PACKAGE_NAME}.programmer\" \
+	-DGRESNAME=\"/org/hck/${PACKAGE_NAME}/programmer\" \
 	$(VOID)
-libbasic_la_LIBADD=\
+libprogrammer_la_LIBADD=\
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
 	$(GOBJECT_LIBS) \
@@ -84,7 +84,7 @@ libbasic_la_LIBADD=\
 	$(MATHLIB_LIBS) \
 	gtk/libbundle.la \
 	$(VOID)
-libbasic_la_LDFLAGS=\
+libprogrammer_la_LDFLAGS=\
 	-module \
 	-rpath ${modulesdir} \
 	-release ${PACKAGE_RELEASE} \

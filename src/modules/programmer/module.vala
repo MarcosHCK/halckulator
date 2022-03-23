@@ -18,20 +18,20 @@
 
 namespace Hcl
 {
-  public class BasicModule : Hcl.Module
+  public class ProgrammerModule : Hcl.Module
   {
-    public override GLib.Menu get_appereance () { return new GLib.Menu (); }
-    public override Hcl.ModuleLayout get_layout () { return new BasicLayout (); }
+    public override GLib.Menu get_appereance () { return new GLib.Menu ();}
+    public override Hcl.ModuleLayout get_layout () { return new ProgrammerLayout (); }
   }
 
   [ModuleInit]
   public Hcl.Module module_entry () throws GLib.Error
   {
     Module.check_version (Config.PACKAGE_VERSION);
-    var module = new BasicModule ();
+    var module = new ProgrammerModule ();
     module.id = Config.GAPPNAME;
-    module.name = "Basic";
-    module.description = "Basic calculator layout";
+    module.name = "Programmer";
+    module.description = "Programmer layout";
   return module;
   }
 }

@@ -15,17 +15,5 @@
 # along with halckulator. If not, see <http://www.gnu.org/licenses/>.
 #
 
-*.[ao]
-*.la
-*.lai
-*.lo
-*.Po
-*.Plo
-*.Tpo
-
-libbasic.so*
-libbasic-*.so*
-
-basicore.c
-layout.c
-module.c
+resources.c
+resources.h

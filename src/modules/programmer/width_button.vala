@@ -18,20 +18,39 @@
 
 namespace Hcl
 {
-  public class BasicModule : Hcl.Module
+  public enum WidthType
   {
-    public override GLib.Menu get_appereance () { return new GLib.Menu (); }
-    public override Hcl.ModuleLayout get_layout () { return new BasicLayout (); }
+    BYTE,
+    WORD,
+    DWORD,
+    QWORD,
   }
 
-  [ModuleInit]
-  public Hcl.Module module_entry () throws GLib.Error
+  [GtkTemplate (ui = "/org/hck/halckulator/programmer/ui/width_button.ui")]
+  public class WidthButton : Gtk.Button
   {
-    Module.check_version (Config.PACKAGE_VERSION);
-    var module = new BasicModule ();
-    module.id = Config.GAPPNAME;
-    module.name = "Basic";
-    module.description = "Basic calculator layout";
-  return module;
+    public WidthType width { get; private set; }
+
+  /*
+   * Signals
+   *
+   */
+
+    [GtkCallback]
+    private void on_clicked (Gtk.Button button)
+    {
+
+    }
+
+  /*
+   * Constructor
+   *
+   */
+
+    construct
+    {
+      width = WidthType.QWORD;
+      label = @"$(width)";
+    }
   }
 }

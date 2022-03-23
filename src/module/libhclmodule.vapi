@@ -26,8 +26,8 @@ namespace Hcl
     public string id { get; set; }
     public string name { get; set; }
     public string description { get; set; }
-    public abstract unowned GLib.Menu get_appereance ();
-    public abstract unowned Hcl.ModuleLayout get_layout ();
+    public abstract GLib.Menu get_appereance ();
+    public abstract Hcl.ModuleLayout get_layout ();
     public bool is_consistent ();
     public static bool check_version (string expected) throws GLib.Error;
   }
@@ -64,8 +64,8 @@ namespace Hcl
     public void add_path (GLib.File path);
     public bool load (GLib.File file) throws GLib.Error;
     public bool load_all () throws GLib.Error;
-    public unowned GLib.Menu get_appereance (string id);
-    public unowned Hcl.ModuleLayout get_layout (string id);
+    public GLib.Menu get_appereance (string id);
+    public Hcl.ModuleLayout get_layout (string id);
   }
 
   [CCode (cheader_filename = "libhclmodule.h")]

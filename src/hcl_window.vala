@@ -22,6 +22,7 @@ namespace Hcl
   public class Window : Gtk.ApplicationWindow
   {
     private Hcl.ModuleLayout contents;
+    private GLib.Settings gsettings;
 
   /*
    * Properties
@@ -61,6 +62,7 @@ namespace Hcl
     private void on_change_state (GLib.SimpleAction action, GLib.Variant? state)
     {
       action.set_state (state);
+      gsettings.set_value ("selected-layout", state);
       changed_layout ();
     }
 
@@ -74,7 +76,7 @@ namespace Hcl
       Object (show_menubar : false);
       GLib.Action action;
 
-      var gsettings = application.gsettings;
+      gsettings = application.gsettings;
       var selected = gsettings.get_string ("selected-layout");
       var state = new GLib.Variant ("s", selected);
 
