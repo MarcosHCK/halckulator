@@ -33,8 +33,6 @@ Author: MarcosHCK
     <property name="default-width">800</property>
     <property name="default-height">400</property>
     <property name="show-menubar">False</property>
-    <signal name="notify::application" handler="on_application_notify" swapped="no"/>
-    <signal name="notify::is-active" handler="on_is_active_notify" swapped="no"/>
     <child>
       <placeholder/>
     </child>

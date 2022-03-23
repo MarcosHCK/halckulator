@@ -136,6 +136,20 @@ hcl_module_manager_class_init (HclModuleManagerClass* klass)
   oclass->get_property = hcl_module_manager_class_get_property;
   oclass->finalize = hcl_module_manager_class_finalize;
   oclass->dispose = hcl_module_manager_class_dispose;
+
+  properties[prop_menu] =
+    g_param_spec_object
+    ("menu",
+     "Layout menu",
+     "Layout menu",
+     G_TYPE_MENU,
+     G_PARAM_READABLE
+     | G_PARAM_STATIC_STRINGS);
+
+  g_object_class_install_properties
+  (oclass,
+   prop_number,
+   properties);
 }
 
 static void

@@ -22,19 +22,18 @@ namespace Hcl
   public class Window : Gtk.ApplicationWindow
   {
     private Hcl.ModuleLayout contents;
-    private weak GLib.WeakRef layout_notify_object;
-    private ulong layout_notify_id;
 
   /*
    * Properties
    *
    */
 
-    private string _layout;
-    public string layout
-    {
-      get { return _layout; }
-      set { _layout = value; on_switch_layout (value); }
+    public string layout {
+      get {
+        var action = this.lookup_action ("Switch");
+        var state = action.get_state ();
+        return state.get_string ();
+      }
     }
 
   /*
@@ -42,52 +41,27 @@ namespace Hcl
    *
    */
 
-    [GtkCallback]
-    private void on_is_active_notify ()
+    public signal void changed_layout ()
     {
-      var app = application as Hcl.Application;
-      if (is_active && app.layout != layout)
-        {
-          app.layout = layout;
-        }
-    }
-
-    [GtkCallback]
-    private void on_application_notify ()
-    {
-      var app = application as Hcl.Application;
-      var prev = layout_notify_object.@get ();
-      if (prev != null)
-        {
-          prev.disconnect (layout_notify_id);
-          layout_notify_id = 0;
-        }
-
-      layout_notify_id =
-      app.notify["layout"].connect (this.on_layout_notify);
-      layout_notify_object.@set (app);
-    }
-
-    private void on_layout_notify ()
-    {
-      var app = application as Hcl.Application;
-      layout = app.layout;
-    }
-
-    private void on_switch_layout (string id)
-    {
-      var app = application as Hcl.Application;
-      var action = this.lookup_action ("Switch");
+      var app = (application as Hcl.Application);
       var manager = app.manager;
-
-      var state = new GLib.Variant ("s", id);
-      ((GLib.SimpleAction) action).set_state (state);
 
       if (contents != null)
         this.remove (contents);
-      contents = manager.get_layout (id);
+      contents = manager.get_layout (layout);
       contents.show ();
       this.add (contents);
+    }
+
+  /*
+   * private API
+   *
+   */
+
+    private void on_change_state (GLib.SimpleAction action, GLib.Variant? state)
+    {
+      action.set_state (state);
+      changed_layout ();
     }
 
   /*
@@ -95,14 +69,17 @@ namespace Hcl
    *
    */
 
-    public Window ()
+    public Window (Hcl.Application application)
     {
       Object (show_menubar : false);
       GLib.Action action;
 
-      var state = new GLib.Variant ("s", "");
+      var gsettings = application.gsettings;
+      var selected = gsettings.get_string ("selected-layout");
+      var state = new GLib.Variant ("s", selected);
+
       action = new GLib.SimpleAction.stateful ("Switch", (GLib.VariantType) "s", state);
-      ((GLib.SimpleAction) action).activate.connect ((idv) => { this.layout = idv.get_string (); });
+      ((GLib.SimpleAction) action).change_state.connect (on_change_state);
       ((GLib.ActionMap) this).add_action (action);
       action = new GLib.SimpleAction ("Undo", (GLib.VariantType) null);
       ((GLib.ActionMap) this).add_action (action);
@@ -114,6 +91,8 @@ namespace Hcl
       ((GLib.ActionMap) this).add_action (action);
       action = new GLib.SimpleAction ("Paste", (GLib.VariantType) null);
       ((GLib.ActionMap) this).add_action (action);
+      this.application = application;
+      this.changed_layout ();
     }
   }
 }

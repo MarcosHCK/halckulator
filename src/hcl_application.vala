@@ -24,40 +24,23 @@ namespace Hcl
     MISSING_SETTINGS,
   }
 
+  enum MenuPtrID
+  {
+    APPEREANCE,
+    LAYOUT,
+  }
+
   public class Application : Gtk.Application, GLib.Initable
   {
     public Hcl.ModuleManager manager { get; private set; }
     public GLib.Settings gsettings { get; private set; }
-    private GLib.Func<GLib.Menu> update_appereance = (() => { });
-    private GLib.Func<GLib.Menu> update_layouts = (() => { });
-    private GLib.Func<string> update_layout = (() => { });
     private Hcl.Settings settings;
+    private GLib.Menu menuptr;
 
   /*
-   * Properties
+   * Signals
    *
    */
-
-    private GLib.Menu _appereance = null;
-    private GLib.Menu appereance
-    {
-      get { return _appereance; }
-      set { _appereance = value; update_appereance (value); }
-    }
-
-    private GLib.Menu _layouts = null;
-    private GLib.Menu layouts
-    {
-      get { return _layouts; }
-      set { _layouts = value; update_layouts (value); }
-    }
-
-    private string _layout = null;
-    public string layout
-    {
-      get { return _layout; }
-      set { _layout = value; update_layout (value); }
-    }
 
     private signal void turnoff ();
 
@@ -115,19 +98,46 @@ namespace Hcl
    *
    */
 
-    private static void connect_updates (Hcl.Application self_, GLib.Menu section)
+    private void on_changed_layout (Hcl.Window window)
     {
-      unowned var self = self_;
-      unowned var manager = self.manager;
+      if (!window.is_active) return;
+      var state = window.layout;
+      var menu = manager.get_appereance (state);
 
-      self.update_appereance = (menu) => { section.remove (0); section.insert_submenu (0, "Appereance", menu); };
-      self.update_layouts = (menu) => { section.remove (1); section.insert_submenu (1, "Layouts", menu); };
-      self.update_layout = (id) => { self.appereance = manager.get_appereance (id); };
-      manager.notify["menu"].connect (() => { self.layouts = manager.menu; });
+      menuptr.remove (0);
+      menuptr.insert_submenu (0, "Appereance", menu);
+    }
 
-      section.insert (0, null, null);
-      self.layouts = manager.menu;
-      self.layout = "org.hck.halckulator.basic";
+    private void on_is_active_notify (GLib.Object sender, GLib.ParamSpec pspec)
+    {
+      var window = (!) (sender as Hcl.Window);
+      on_changed_layout (window);
+    }
+
+    private void on_menu_notify (GLib.Object sender, GLib.ParamSpec pspec)
+    {
+      var manager = (!) (sender as Hcl.ModuleManager);
+      var menu = manager.menu;
+
+      menuptr.remove (1);
+      menuptr.insert_submenu (1, "Layout", menu);
+    }
+
+  /*
+   * abstract API
+   *
+   */
+
+    public override void window_added (Gtk.Window window)
+    {
+      base.window_added (window);
+      window.notify["is-active"].connect (on_is_active_notify);
+    }
+
+    public override void window_removed (Gtk.Window window)
+    {
+      base.window_removed (window);
+      window.notify["is-active"].disconnect (on_is_active_notify);
     }
 
     public override void startup ()
@@ -143,7 +153,12 @@ namespace Hcl
       var builder = new Gtk.Builder.from_resource (name);
       var menu = builder.get_object ("root") as GLib.Menu;
       var section = builder.get_object ("module") as GLib.Menu;
-      Application.connect_updates (this, section);
+
+      menuptr = section;
+      section.append ("label1", null);
+      section.append ("label2", null);
+      manager.notify["menu"].connect (on_menu_notify);
+      manager.notify_property ("menu");
 
     /*
      * Set menu
@@ -157,21 +172,9 @@ namespace Hcl
     public override void activate ()
     {
       base.activate ();
-      var window = new Hcl.Window ();
+      var window = new Hcl.Window (this);
       turnoff.connect (window.close);
-      window.set_application (this);
       window.present ();
-      window.layout = layout;
-    }
-
-    public override void open (GLib.File[] files, string hint)
-    {
-      base.open (files, hint);
-      var window = new Hcl.Window ();
-      turnoff.connect (window.close);
-      window.set_application (this);
-      window.present ();
-      window.layout = layout;
     }
 
   /*
