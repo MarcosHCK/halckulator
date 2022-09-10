@@ -16,22 +16,12 @@
  *
  */
 
-namespace Hcl
+[CCode (cprefix = "_HclPatch", lower_case_cprefix = "_hcl_patch_")]
+namespace Hcl.Patch
 {
-  public class ProgrammerModule : Hcl.Module
+  [CCode (cheader_filename = "patch.h")]
+  public class Module
   {
-    public override GLib.Menu get_appereance () { return new GLib.Menu ();}
-    public override Hcl.ModuleLayout get_layout () { return new ProgrammerLayout (); }
-  }
-
-  [ModuleInit]
-  public Hcl.Module module_entry () throws GLib.Error
-  {
-    Module.check_version (Config.PACKAGE_VERSION);
-    var module = new ProgrammerModule ();
-    module.id = Config.GAPPNAME;
-    module.name = "Programmer";
-    module.description = "Programmer layout";
-  return module;
+    public static string check_version (string expected, out bool failed);
   }
 }

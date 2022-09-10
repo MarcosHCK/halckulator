@@ -23,13 +23,5 @@
 *.Plo
 *.Tpo
 
+halckulator.exe
 halckulator
-libhalckulator.so*
-libhalckulator-*.so*
-libhalckulator.h
-libhalckulator.vapi
-Hcl-*.gir
-Hcl-*.typelib
-
-hcl_application.c
-hcl_window.c

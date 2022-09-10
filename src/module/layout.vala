@@ -15,22 +15,10 @@
  * along with halckulator.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef __HCL_MODULE_ENTRY__
-#define __HCL_MODULE_ENTRY__ 1
-#include <gmodule.h>
-#include <module.h>
 
-#define HCL_MODULE_ENTRY_SIGNATURE hcl_module_entry
-typedef HclModule* (*HclModuleEntry) (GError** error);
-
-#if __cplusplus
-extern "C" {
-#endif // __cplusplus
-
-
-
-#if __cplusplus
+namespace Hcl
+{
+  public abstract interface Layout : Gtk.Widget
+  {
+  }
 }
-#endif // __cplusplus
-
-#endif // __HCL_MODULE_ENTRY__

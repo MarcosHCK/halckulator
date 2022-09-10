@@ -14,24 +14,41 @@
 # You should have received a copy of the GNU General Public License
 # along with halckulator. If not, see <http://www.gnu.org/licenses/>.
 #
+
 AC_PREREQ([2.69])
 
-m4_define([p_VERSION], [0.1.0.0])
-m4_define([p_RELEASE], [alpha])
+#
+# Take version information
+# Extract mayor, minor and micro version
+# numbers from version string
+# Also define release type
+#
 
-AC_INIT([halckulator], [p_VERSION], [halckulator.bugs@hcktm.com], [halckulator], [https://www.hcktm.com/halckulator/])
-AC_CONFIG_SRCDIR([src/hcl_main.c])
+m4_define([v_VERSION], m4_esyscmd_s([git describe]))
+m4_define([v_MAJOR], m4_esyscmd_s([git describe | sed -e 's/^v\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)\-\([a-z]*\).*/\1/']))
+m4_define([v_MINOR], m4_esyscmd_s([git describe | sed -e 's/^v\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)\-\([a-z]*\).*/\2/']))
+m4_define([v_MICRO], m4_esyscmd_s([git describe | sed -e 's/^v\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)\-\([a-z]*\).*/\3/']))
+m4_define([v_STAGE], m4_esyscmd_s([git describe | sed -e 's/^v\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)\-\([a-z]*\).*/\4/']))
+
+#
+# Initialize autoconf
+#
+
+AC_INIT([halckulator], [v_VERSION], [halckulator.bugs@hcktm.com], [halckulator], [https://www.hcktm.com/halckulator/])
+AC_CONFIG_SRCDIR([src/main.c])
 AC_LANG([C])
 
 #
 # Configure aclocal path
 #
+
 AC_CONFIG_MACRO_DIRS([m4])
 
 #
 # Setup default cross-compiling
 # environment mechanics
 #
+
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
@@ -39,30 +56,53 @@ AC_CANONICAL_TARGET
 #
 # Automake
 #
+
 AM_INIT_AUTOMAKE([subdir-objects])
 
 #
-# Extract mayor, minor and micro version
-# numbers from version string
-# Also define release type
+# Custom build options
 #
-m4_define([vernum_pattern],[\(@<:@0-9@:>@*\)])
 
-AC_SUBST([PACKAGE_VERSION_MAYOR])
-PACKAGE_VERSION_MAYOR=$(echo "$PACKAGE_VERSION" | sed -e 's/vernum_pattern\.vernum_pattern\.vernum_pattern\.vernum_pattern/\1/')
-AC_DEFINE_UNQUOTED([PACKAGE_VERSION_MAYOR], ["$PACKAGE_VERSION_MAYOR"], [Version mayor number])
-AC_SUBST([PACKAGE_VERSION_MINOR])
-PACKAGE_VERSION_MINOR=$(echo "$PACKAGE_VERSION" | sed -e 's/vernum_pattern\.vernum_pattern\.vernum_pattern\.vernum_pattern/\2/')
-AC_DEFINE_UNQUOTED([PACKAGE_VERSION_MINOR], ["$PACKAGE_VERSION_MINOR"], [Version minor number])
-AC_SUBST([PACKAGE_VERSION_MICRO])
-PACKAGE_VERSION_MICRO=$(echo "$PACKAGE_VERSION" | sed -e 's/vernum_pattern\.vernum_pattern\.vernum_pattern\.vernum_pattern/\3/')
-AC_DEFINE_UNQUOTED([PACKAGE_VERSION_MICRO], ["$PACKAGE_VERSION_MICRO"], [Version micro number])
-AC_SUBST([PACKAGE_VERSION_BUILD])
-PACKAGE_VERSION_BUILD=$(echo "$PACKAGE_VERSION" | sed -e 's/vernum_pattern\.vernum_pattern\.vernum_pattern\.vernum_pattern/\4/')
-AC_DEFINE_UNQUOTED([PACKAGE_VERSION_BUILD], ["$PACKAGE_VERSION_BUILD"], [Version build number])
+AC_ARG_ENABLE(
+  [debug],
+  [AS_HELP_STRING(
+    [--enable-debug],
+    [Enable debug object output @<:@default=no@:>@])],
+  [AM_CONDITIONAL([DEBUG], [test "x$enableval" != "xno"])
+   if test "x$enableval" != "xno"; then
+    AC_DEFINE([DEBUG], [1], [Debugging enabled])
+    AC_SUBST([DEBUG], [1])
+   else
+    AC_DEFINE([DEBUG], [0], [Debugging disabled])
+    AC_SUBST([DEBUG], [0])
+   fi],
+  [ AC_DEFINE([DEBUG], [0], [Debugging disabled])
+    AC_SUBST([DEBUG], [0])])
 
-AC_DEFINE([PACKAGE_RELEASE], ["p_RELEASE"], [Release tag])
-AC_SUBST([PACKAGE_RELEASE], [p_RELEASE])
+AC_ARG_ENABLE(
+  [developer],
+  [AS_HELP_STRING(
+    [--enable-developer],
+    [Enable developer features @<:@default=no@:>@])],
+  [AM_CONDITIONAL([DEVELOPER], [test "x$enableval" != "xno"])
+   if test "x$enableval" != "xno"; then
+    AC_DEFINE([DEVELOPER], [1], [Developer features enabled])
+    AC_SUBST([DEVELOPER], [1])
+   else
+    AC_DEFINE([DEVELOPER], [0], [Developer features disabled])
+    AC_SUBST([DEVELOPER], [0])
+   fi],
+  [ AC_DEFINE([DEVELOPER], [0], [Developer features disabled])
+    AC_SUBST([DEVELOPER], [0])])
+
+AC_SUBST([PACKAGE_VERSION_MAJOR], [v_MAJOR])
+AC_DEFINE_UNQUOTED([PACKAGE_VERSION_MAJOR], [v_MAJOR], [Version mayor number])
+AC_SUBST([PACKAGE_VERSION_MINOR], [v_MINOR])
+AC_DEFINE_UNQUOTED([PACKAGE_VERSION_MINOR], [v_MINOR], [Version minor number])
+AC_SUBST([PACKAGE_VERSION_MICRO], [v_MICRO])
+AC_DEFINE_UNQUOTED([PACKAGE_VERSION_MICRO], [v_MICRO], [Version micro number])
+AC_SUBST([PACKAGE_RELEASE], ["v_STAGE"])
+AC_DEFINE([PACKAGE_RELEASE], ["v_STAGE"], [Release stage])
 
 #
 #  Checks for programs we'll
@@ -84,12 +124,7 @@ AC_PROG_RANLIB
 AM_PROG_VALAC
 
 PKG_PROG_PKG_CONFIG
-GOBJECT_INTROSPECTION_REQUIRE([1.68.0])
 
-AC_CHECK_PROG([GLIB_GENMARSHAL], [glib-genmarshal], [glib-genmarshal], [no])
-if test "x$GLIB_GENMARSHAL" = "xno"; then
-  AC_MSG_FAILURE([glib-genmarshal not found our your system])
-fi
 AC_CHECK_PROG([GLIB_COMPILE_RESOURCES], [glib-compile-resources], [glib-compile-resources], [no])
 if test "x$GLIB_COMPILE_RESOURCES" = "xno"; then
   AC_MSG_FAILURE([glib-compile-resources not found our your system])
@@ -97,10 +132,6 @@ fi
 AC_CHECK_PROG([GLIB_COMPILE_SCHEMAS], [glib-compile-schemas], [glib-compile-schemas], [no])
 if test "x$GLIB_COMPILE_SCHEMAS" = "xno"; then
   AC_MSG_FAILURE([glib-compile-schemas not found our your system])
-fi
-AC_CHECK_PROG([GLIB_MKENUMS], [glib-mkenums], [glib-mkenums], [no])
-if test "x$GLIB_MKENUMS" = "xno"; then
-  AC_MSG_FAILURE([glib-mkenums not found our your system])
 fi
 
 #
@@ -116,70 +147,16 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [Gettext package])
 
 #
-# Custom build options
-#
-
-debugging="no"
-developer="no"
-
-AC_ARG_ENABLE([debug],
-              [AS_HELP_STRING([--enable-debug], [Enable debug object output @<:@default=no@:>@])],
-              [if test "x$enableval" != "xno"; then
-                debugging="yes"
-               fi
-              ])
-
-AM_CONDITIONAL([DEBUG], [test "x$debugging" = "xyes"])
-if test "x$debugging" = "xno"; then
-  AC_DEFINE([DEBUG], [0], [Debugging disabled])
-  AC_SUBST([DEBUG], [0])
-else
-  AC_DEFINE([DEBUG], [1], [Debugging enabled])
-  AC_SUBST([DEBUG], [1])
-fi
-
-AC_ARG_ENABLE([developer],
-              [AS_HELP_STRING([--enable-developer], [Enable developer features @<:@default=no@:>@])],
-              [if test "x$enableval" != "xno"; then
-                developer="yes"
-               fi
-              ])
-
-AM_CONDITIONAL([DEVELOPER], [test "x$developer" = "xyes"])
-if test "x$developer" = "xno"; then
-  AC_DEFINE([DEVELOPER], [0], [Developer feature disabled])
-  AC_SUBST([DEVELOPER], [0])
-else
-  AC_DEFINE([DEVELOPER], [1], [Developer feature enabled])
-  AC_SUBST([DEVELOPER], [1])
-fi
-
-#
 # Check for libraries using pkg-config
 # Note: keep sorted alphabetically 
 #
 
+PKG_CHECK_MODULES([ABACO], [libabaco])
 PKG_CHECK_MODULES([GIO], [gio-2.0])
 PKG_CHECK_MODULES([GLIB], [glib-2.0])
 PKG_CHECK_MODULES([GMODULE], [gmodule-2.0])
-PKG_CHECK_MODULES([GOBJECT_INTROSPECTION], [gobject-introspection-1.0])
 PKG_CHECK_MODULES([GOBJECT], [gobject-2.0])
 PKG_CHECK_MODULES([GTK], [gtk+-3.0])
-PKG_CHECK_MODULES([LIBGMP], [gmp])
-PKG_CHECK_MODULES([LIBMPFR], [mpfr])
-
-AC_SUBST([LIBHALCKULATOR_CFLAGS], [-I\${top_srcdir}/src/])
-AC_SUBST([LIBHALCKULATOR_LIBS], [\${top_srcdir}/src/libhalckulator.la])
-AC_SUBST([MATHCORE_CFLAGS], [-I\${top_srcdir}/src/mathcore/])
-AC_SUBST([MATHCORE_LIBS], [\${top_srcdir}/src/mathcore/libmathcore.la])
-AC_SUBST([MATHLIB_CFLAGS], [-I\${top_srcdir}/src/mathlib/])
-AC_SUBST([MATHLIB_LIBS], [\${top_srcdir}/src/mathlib/libmathlib.la])
-
-#
-# Check for libraries
-#
-
-AC_CHECK_LIB([gmp], [__gmpz_init])
 
 #
 # Checks for header files.
@@ -189,13 +166,9 @@ AC_CHECK_LIB([gmp], [__gmpz_init])
 # Checks for typedefs, structures, and compiler characteristics.
 #
 
-AC_C_INLINE
-
 #
 # Checks for library functions.
 #
-
-AC_CHECK_FUNCS([atexit memset setlocale])
 
 #
 # Prepare output
@@ -204,16 +177,10 @@ AC_CHECK_FUNCS([atexit memset setlocale])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
 po/Makefile.in
-src/settings/Makefile
-src/mathcore/Makefile
-src/mathlib/Makefile
 src/module/Makefile
 src/modules/Makefile
-src/modules/basic/Makefile
-src/modules/basic/gtk/Makefile
-src/modules/programmer/Makefile
-src/modules/programmer/gtk/Makefile
-src/gtk/Makefile
+src/resources/Makefile
+src/settings/Makefile
 src/Makefile
 Makefile
 ])

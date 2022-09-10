@@ -15,45 +15,57 @@
  * along with halckulator.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef __MATH_NUMBEREXT__
-#define __MATH_NUMBEREXT__ 1
-#include <number.h>
-#include <gmp.h>
-
-#if __cplusplus
-extern "C" {
-#endif // __cplusplus
-
-typedef enum
-{
-  MATH_NUMBER_KIND_INTEGER,
-  MATH_NUMBER_KIND_RATIONAL,
-  MATH_NUMBER_KIND_REAL,
-} MathNumberKind;
-
-struct _MathNumberPrivate
-{
-  MathNumberKind kind;
-  union
-  {
-    mpz_t integer;
-    mpq_t rational;
-    mpf_t real;
-  };
-};
-
-/*
- * ext API
- *
- */
+#include <config.h>
+#include <gtk/resources.h>
 
 void
-math_core_pushnumber (MathCore* core, MathNumberKind kind);
-MathNumber*
-math_core_tonumber (MathCore* core, int index);
-
-#if __cplusplus
+pointer_ensure (gpointer pobject)
+{
+  if (G_UNLIKELY (pobject == NULL))
+    g_error ("Erghh?");
 }
-#endif // __cplusplus
 
-#endif // __MATH_NUMBER__
+int
+main (int argc, char* argv[])
+{
+  GApplication* app = NULL;
+  gboolean success = TRUE;
+  GError* tmp_err = NULL;
+  int status = 0;
+
+  /*
+   * Ensure things
+   *
+   */
+
+  pointer_ensure (resources_get_resource ());
+
+  /*
+   * Execute
+   *
+   */
+
+  app =
+  (GApplication*)
+  g_application_new (GAPPNAME, G_APPLICATION_FLAGS_NONE);
+
+  /*
+   * Run it!
+   *
+   */
+
+  status =
+  g_application_run (app, argc, argv);
+
+  /*
+   * Cleanup
+   *
+   */
+
+#if DEBUG == 1
+  g_assert_finalize_object (app);
+#else
+  g_object_unref (app);
+#endif // DEBUG
+return status;
+}

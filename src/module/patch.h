@@ -15,15 +15,20 @@
  * along with halckulator.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#ifndef __MODULE_PATCH__
+#define __MODULE_PATCH__ 1
+#include <glib.h>
 
-namespace Math
-{
-  [CCode (cheader_filename = "libmathlib.h")]
-  namespace Lib
-  {
-    public static int add (Math.Core core);
-    public static int sub (Math.Core core);
-    public static int mul (Math.Core core);
-    public static int div (Math.Core core);
-  }
+#if __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+G_GNUC_INTERNAL
+gchar*
+_hcl_patch_module_check_version (const gchar* expected, gboolean* failed);
+
+#if __cplusplus
 }
+#endif // __cplusplus
+
+#endif // __MODULE_PATCH__

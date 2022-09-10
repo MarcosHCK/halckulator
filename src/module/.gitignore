@@ -23,7 +23,11 @@
 *.Plo
 *.Tpo
 
-libhclmodule.so*
-libhclmodule-*.so*
-HclModule-*.gir
-HclModule-*.typelib
+libmodule*.so*
+libmodule*.dll*
+libmodule*.dylib*
+libmodule*.vapi
+libmodule*.h
+
+layout.c
+module.c
