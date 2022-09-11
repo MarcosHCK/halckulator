@@ -15,51 +15,48 @@
  * along with halckulator.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#include <config.h>
-#include <resources/bundle.h>
 
-void
-pointer_ensure (gpointer pobject)
+namespace Hcl
 {
-  if (G_UNLIKELY (pobject == NULL))
-    g_error ("Erghh?");
-}
+  public class Manager : GLib.Object
+  {
+    /*
+     * public API
+     *
+     */
 
-GApplication*
-hcl_application_new (GApplicationFlags flags);
+    public GLib.Menu? get_menu (string id)
+    {
+      return null;
+    }
 
-int
-main (int argc, char* argv[])
-{
-  GApplication* app = NULL;
-  gboolean success = TRUE;
-  GError* tmp_err = NULL;
-  int status = 0;
+    public Hcl.Layout? get_layout (string id)
+    {
+      return null;
+    }
 
-  /*
-   * Ensure things
-   *
-   */
+    public bool has_module (string id)
+    {
+      return false;
+    }
 
-  pointer_ensure (bundle_get_resource ());
+    public void add_path (string path)
+    {
+    }
 
-  /*
-   * Execute
-   *
-   */
+    public bool load_all () throws GLib.Error
+    {
+    return true;
+    }
 
-  app = hcl_application_new (G_APPLICATION_FLAGS_NONE);
-  status = g_application_run (app, argc, argv);
+    /*
+     * Constructors
+     *
+     */
 
-  /*
-   * Cleanup
-   *
-   */
-
-#if DEVELOPER == 1
-  g_assert_finalize_object (app);
-#else
-  g_object_unref (app);
-#endif // DEBUG
-return status;
+    public Manager ()
+    {
+      Object ();
+    }
+  }
 }

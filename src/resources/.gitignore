@@ -15,5 +15,5 @@
 # along with halckulator. If not, see <http://www.gnu.org/licenses/>.
 #
 
-resources.c
-resources.h
+bundle.c
+bundle.h

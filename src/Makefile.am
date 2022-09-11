@@ -54,6 +54,10 @@ EXTRA_DIST=\
 bin_PROGRAMS=halckulator
 
 halckulator_SOURCES=\
+	gtk/application.vala \
+	gtk/manager.vala \
+	gtk/message.vala \
+	gtk/window.vala \
 	main.c
 	$(VOID)
 halckulator_CFLAGS=\
@@ -66,6 +70,9 @@ halckulator_CFLAGS=\
 	-DGAPPNAME=\"org.hck.${PACKAGE_NAME}\" \
 	-DGRESNAME=\"/org/hck/${PACKAGE_NAME}\" \
 	-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\" \
+	-DABSTOPBUILDDIR=\"${abs_top_builddir}\" \
+	-DMODULESDIR=\"${modulesdir}\" \
+	-DSCHEMASDIR=\"${schemasdir}\" \
 	$(VOID)
 halckulator_LDADD=\
 	$(GIO_LIBS) \
@@ -74,4 +81,21 @@ halckulator_LDADD=\
 	$(GTK_LIBS) \
 	module/libmodule.la \
 	resources/libbundle.la \
+	$(VOID)
+
+#
+# Vala
+#
+
+AM_VALAFLAGS=\
+	--vapidir=vapi/ \
+	--vapidir=module/ \
+	--vapi-comments \
+	--hide-internal \
+	--abi-stability \
+	--pkg config \
+	--pkg libmodule \
+	-D DEBUG=${DEBUG} \
+	-D DEVELOPER=${DEVELOPER} \
+	--gresources "resources/bundle.gresources.xml" \
 	$(VOID)

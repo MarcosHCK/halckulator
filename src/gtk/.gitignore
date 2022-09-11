@@ -14,19 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with halckulator. If not, see <http://www.gnu.org/licenses/>.
 #
-ACLOCAL_AMFLAGS=-I m4 ${ACLOCAL_FLAGS}
 
-SUBDIRS=\
-	src \
-	po
-
-EXTRA_DIST=\
-	config.rpath
-
-code:
-	code ${top_builddir}
-
-glade:
-	GLADE_CATALOG_SEARCH_PATH=${top_builddir}/src/resources/catalogs/ \
-	LD_LIBRARY_PATH=${top_builddir}/src/module/.libs/ \
-	glade
+.dirstamp
+application.c
+manager.c
+message.c
+window.c

@@ -23,7 +23,7 @@ VOID=
 #
 
 RESOURCES=\
-	$(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies resources.gresources.xml) \
+	$(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies bundle.gresources.xml) \
 	$(VOID)
 
 EXTRA_DIST+=\
@@ -31,18 +31,19 @@ EXTRA_DIST+=\
 	$(VOID)
 	
 CLEANFILES=\
-	resources.c \
-	resources.h \
+	bundle.c \
+	bundle.h \
 	$(VOID)
 
 #
 # *.gresources.xml to *.c and *.h make target
 #
 
-resources.c: resources.gresources.xml $(RESOURCES)
-	$(GLIB_COMPILE_RESOURCES) --target=$@ --generate-source $<
+SUFFIXES=.gresources.xml .c .h
 
-resources.h: resources.gresources.xml $(RESOURCES)
+.gresources.xml.c:
+	$(GLIB_COMPILE_RESOURCES) --target=$@ --generate-source $<
+.gresources.xml.h:
 	$(GLIB_COMPILE_RESOURCES) --target=$@ --generate-header $<
 
 #
@@ -52,11 +53,11 @@ resources.h: resources.gresources.xml $(RESOURCES)
 noinst_LTLIBRARIES=libbundle.la
 
 noinst_DATA=\
-	resources.h \
+	bundle.h \
 	$(VOID)
 
 libbundle_la_SOURCES=\
-	resources.c \
+	bundle.c \
 	$(VOID)
 libbundle_la_CFLAGS=\
 	$(GIO_CFLAGS) \

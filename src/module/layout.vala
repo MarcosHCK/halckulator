@@ -18,7 +18,7 @@
 
 namespace Hcl
 {
-  public abstract interface Layout : Gtk.Widget
+  public interface Layout : Gtk.Widget
   {
   }
 }

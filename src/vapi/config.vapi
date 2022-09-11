@@ -26,13 +26,7 @@ namespace Config
   public const string GRESNAME;
 
   public const string ABSTOPBUILDDIR;
-  public const string ASSETSDIR;
-  public const string GFXDIR;
-  public const string GIRDIR;
   public const string MODULESDIR;
-  public const string PKGDATADIR;
-  public const string PKGLIBDIR;
-  public const string PKGLIBEXECDIR;
   public const string SCHEMASDIR;
 
   public const string PACKAGE_NAME;

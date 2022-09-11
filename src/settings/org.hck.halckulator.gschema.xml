@@ -20,7 +20,7 @@ Author: MarcosHCK
 -->
 <schemalist>
   <schema path="/org/hck/halckulator/" id="org.hck.halckulator">
-    <key name="selected-layout" type="s">
+    <key name="layout" type="s">
       <default>'org.hck.halckulator.basic'</default>
     </key>
   </schema>
