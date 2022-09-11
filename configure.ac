@@ -151,7 +151,6 @@ AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [Gettext package])
 # Note: keep sorted alphabetically 
 #
 
-PKG_CHECK_MODULES([ABACO], [libabaco])
 PKG_CHECK_MODULES([GIO], [gio-2.0])
 PKG_CHECK_MODULES([GLIB], [glib-2.0])
 PKG_CHECK_MODULES([GMODULE], [gmodule-2.0])
@@ -171,14 +170,23 @@ PKG_CHECK_MODULES([GTK], [gtk+-3.0])
 #
 
 #
+# Recursive configuration
+#
+
+AC_CONFIG_SUBDIRS([
+modules/basic
+])
+
+#
 # Prepare output
 #
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
+modules/Makefile
 po/Makefile.in
 src/module/Makefile
-src/modules/Makefile
+src/module/version.vala
 src/resources/Makefile
 src/settings/Makefile
 src/Makefile

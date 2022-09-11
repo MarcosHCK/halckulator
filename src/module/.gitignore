@@ -31,3 +31,5 @@ libmodule*.h
 
 layout.c
 module.c
+version.vala
+version.c

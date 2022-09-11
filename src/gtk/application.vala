@@ -43,6 +43,41 @@ namespace Hcl
       update_options (menu);
     }
 
+    private GenericSet<Hcl.Module> modules = new GenericSet<Hcl.Module> (GLib.direct_hash, GLib.direct_equal);
+
+    private void on_module_changed ()
+    {
+      var menu = new GLib.Menu ();
+      var iter = modules.iterator ();
+      var module = (Hcl.Module?) null;
+
+      while ((module = iter.next_value ()) != null)
+      {
+        var name = module.name ?? module.id;
+        var item = new GLib.MenuItem (name, null);
+
+        item.set_action_and_target ("win.Switch", "s", module.id);
+        menu.append_item (item);
+      }
+
+      if (menuptr != null)
+      {
+        update_layouts (menu);
+      }
+    }
+
+    private void on_module_added (Hcl.Module module)
+    {
+      modules.add (module);
+      on_module_changed ();
+    }
+
+    private void on_module_removed (Hcl.Module module)
+    {
+      modules.remove (module);
+      on_module_changed ();
+    }
+
     private static void spawn (Hcl.Application self)
     {
       var window = new Hcl.Window ();
@@ -100,36 +135,12 @@ namespace Hcl
     {
       try
       {
-        var name = Config.GRESNAME + "/res/org.hck.halckulator.svg";
-        var icon = new Gdk.Pixbuf.from_resource (name);
-        Gtk.Window.set_default_icon (icon);
-      } catch (GLib.Error e) {
-        critical (@"$(e.domain):$(e.code):$(e.message)");
-        assert_not_reached ();
-      }
-
-      GLib.SettingsSchema schema;
-
-      try
-      {
 #if DEVELOPER == 1
-        var dir = Config.ABSTOPBUILDDIR + "/src/settings/";
+        var dir = Config.ABSTOPBUILDDIR + "/modules/";
 #else // !DEVELOPER
-        var dir = Config.SCHEMASDIR;
+        var dir = Config.MODULESDIR;
 #endif // DEVELOPER
-        var source = new GLib.SettingsSchemaSource.from_directory (dir, null, true);
-            schema = source.lookup (Config.GAPPNAME, false);
-      } catch (GLib.Error e) {
-        critical (@"$(e.domain):$(e.code):$(e.message)");
-        assert_not_reached ();
-      }
-
-      settings = new GLib.Settings.full (schema, null, null);
-      manager = new Hcl.Manager ();
-
-      try
-      {
-        manager.add_path (Config.MODULESDIR);
+        manager.add_path (dir);
         manager.load_all ();
       } catch (GLib.Error e) {
         var message = new Hcl.Message.error_with_gerror (e);
@@ -145,6 +156,27 @@ namespace Hcl
     public override void startup ()
     {
       base.startup ();
+
+      try
+      {
+        var name = Config.GRESNAME + "/res/org.hck.halckulator.svg";
+        var icon = new Gdk.Pixbuf.from_resource (name);
+        Gtk.Window.set_default_icon (icon);
+
+#if DEVELOPER == 1
+        var dir = Config.ABSTOPBUILDDIR + "/src/settings/";
+#else // !DEVELOPER
+        var dir = Config.SCHEMASDIR;
+#endif // DEVELOPER
+        var source = new GLib.SettingsSchemaSource.from_directory (dir, null, true);
+        var schema = source.lookup (Config.GAPPNAME, false);
+            settings = new GLib.Settings.full (schema, null, null);
+            manager = new Hcl.Manager ();
+      } catch (GLib.Error e) {
+        critical (@"$(e.domain):$(e.code):$(e.message)");
+        assert_not_reached ();
+      }
+
       var name = Config.GRESNAME + "/ui/menu.ui";
       var builder = new Gtk.Builder.from_resource (name);
       var menu = builder.get_object ("root") as GLib.Menu;
@@ -153,6 +185,13 @@ namespace Hcl
       menuptr = section;
       section.append ("label1", null);
       section.append ("label2", null);
+      on_module_changed ();
+
+      manager.module_added.connect (on_module_added);
+      manager.module_removed.connect (on_module_removed);
+
+      set_app_menu (menu);
+      set_menubar (menu);
     }
 
     public override void window_added (Gtk.Window window)

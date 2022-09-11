@@ -27,7 +27,7 @@ namespace Hcl
 
   public abstract class Module
   {
-    public const string __invalid__ = "__invalid__";
+    private const string __invalid__ = "__invalid__";
     public string? description { get; protected set; }
     public string? version { get; protected set; }
     public string? name { get; protected set; }
@@ -64,6 +64,12 @@ namespace Hcl
       if (failed)
         throw new ModuleError.FAILED ("Failed!");
     return true;
+    }
+
+    public bool is_consistent ()
+    {
+      return
+      (id != __invalid__);
     }
 
     /*

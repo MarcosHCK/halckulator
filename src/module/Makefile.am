@@ -52,6 +52,7 @@ libmodule_la_SOURCES=\
 	layout.vala \
 	module.vala \
 	patch.c \
+	version.vala \
 	$(VOID)
 libmodule_la_CFLAGS=\
 	$(GIO_CFLAGS) \

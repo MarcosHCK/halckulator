@@ -16,8 +16,8 @@
 #
 
 # Keep sync with
+# - modules/basic/src/Makefile.am
 # - src/Makefile.am
-# - src/modules/basic/Makefile.am
 modulesdir=${pkglibdir}/modules
 
 # Keep sync with
@@ -33,7 +33,6 @@ VOID=
 
 SUBDIRS=\
 	module \
-	modules \
 	resources \
 	settings \
 	$(VOID)
@@ -63,6 +62,7 @@ halckulator_SOURCES=\
 halckulator_CFLAGS=\
 	$(GIO_CFLAGS) \
 	$(GLIB_CFLAGS) \
+	$(GMODULE_CFLAGS) \
 	$(GOBJECT_CFLAGS) \
 	$(GTK_CFLAGS) \
 	-Imodule/ \
@@ -77,6 +77,7 @@ halckulator_CFLAGS=\
 halckulator_LDADD=\
 	$(GIO_LIBS) \
 	$(GLIB_LIBS) \
+	$(GMODULE_LIBS) \
 	$(GOBJECT_LIBS) \
 	$(GTK_LIBS) \
 	module/libmodule.la \

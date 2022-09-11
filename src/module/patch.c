@@ -60,7 +60,7 @@ _hcl_patch_module_check_version (const gchar* expected, gboolean* failed)
 
   do
   {
-    if (G_UNLIKELY (n_bit < BIT_MAX))
+    if (G_UNLIKELY (n_bit >= BIT_MAX))
       FAIL ("Malformed version string");
 
     bits [n_bit++] = (gint) g_strtod (bit, NULL);

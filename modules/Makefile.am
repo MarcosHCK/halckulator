@@ -14,17 +14,21 @@
 # You should have received a copy of the GNU General Public License
 # along with halckulator. If not, see <http://www.gnu.org/licenses/>.
 #
-ACLOCAL_AMFLAGS=-I m4 ${ACLOCAL_FLAGS}
+
+VOID=
+
+#
+# Subdirectories
+#
 
 SUBDIRS=\
-	src \
-	modules \
-	po
+	basic \
+	$(VOID)
 
-code:
-	code ${top_builddir}
+#
+# Extras
+#
 
-glade:
-	GLADE_CATALOG_SEARCH_PATH=${top_builddir}/src/resources/catalogs/ \
-	LD_LIBRARY_PATH=${top_builddir}/src/module/.libs/ \
-	glade
+EXTRA_DIST=\
+	Readme \
+	$(VOID)

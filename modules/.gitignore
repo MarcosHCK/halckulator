@@ -15,21 +15,8 @@
 # along with halckulator. If not, see <http://www.gnu.org/licenses/>.
 #
 
-EXTRA_DIST=
-CLEANFILES=
-VOID=
+*
 
-#
-# Subdirectories
-#
-
-SUBDIRS=\
-	$(VOID)
-
-#
-# Extras
-#
-
-EXTRA_DIST+=\
-	Readme \
-	$(VOID)
+!.gitignore
+!Makefile.am
+!Readme
