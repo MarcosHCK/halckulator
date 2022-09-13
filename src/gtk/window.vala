@@ -33,7 +33,6 @@ namespace Hcl
 
       set
       {
-        print ("set 1 '%s'\r\n", value);
         var state = new GLib.Variant ("s", value);
             _switch.set_state (state);
       }
