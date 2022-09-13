@@ -24,7 +24,7 @@ SUBDIRS=\
 code:
 	code ${top_builddir}
 
-glade:
+glade: all
 	GLADE_CATALOG_SEARCH_PATH=${top_builddir}/src/resources/catalogs/ \
 	LD_LIBRARY_PATH=${top_builddir}/src/module/.libs/ \
 	glade

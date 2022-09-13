@@ -48,7 +48,7 @@ namespace Hcl
 
       set
       {
-        if (_layout != layout)
+        if (_layout != value)
         {
           if (_layout != null)
             remove (_layout);
